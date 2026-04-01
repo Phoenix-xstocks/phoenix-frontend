@@ -75,28 +75,28 @@ function PhoenixModel({
     let scaleMultiplier = 1
     let posX = -0.8
     let posY = -0.3
-    let rotY = 0
+    let rotY = 2.4
 
     if (t <= 0.15) {
-      // Phase 1: big, slightly left and low
+      // Phase 1: big, full profile view facing right
       scaleMultiplier = 1
       posX = -0.8
       posY = -1.5
-      rotY = 0
+      rotY = 2.4
     } else if (t <= 0.85) {
       // Phase 2: long flight - turn and drift right, shrink
       const p = (t - 0.15) / 0.7
       scaleMultiplier = MathUtils.lerp(1, 0.4, p)
       posX = MathUtils.lerp(-0.8, 3.5, p)
       posY = MathUtils.lerp(-1.5, 0.3, Math.sin(p * Math.PI))
-      rotY = MathUtils.lerp(0, 0.8, p)
+      rotY = MathUtils.lerp(2.4, 2.8, p)
     } else {
       // Phase 3: exit right
       const p = (t - 0.85) / 0.15
       scaleMultiplier = MathUtils.lerp(0.4, 0.15, p)
       posX = MathUtils.lerp(3.5, 8, p)
       posY = MathUtils.lerp(0, 0.8, p)
-      rotY = MathUtils.lerp(0.8, 1.2, p)
+      rotY = MathUtils.lerp(1.2, 1.6, p)
     }
 
     groupRef.current.scale.setScalar(scaleMultiplier)
@@ -105,7 +105,7 @@ function PhoenixModel({
 
     // Mouse parallax + scroll-driven turn
     groupRef.current.rotation.y = rotY + smoothMouse.current.x * 0.15
-    groupRef.current.rotation.x = -smoothMouse.current.y * 0.08
+    groupRef.current.rotation.x = -0.15 - smoothMouse.current.y * 0.08
   })
 
   return (
@@ -114,7 +114,7 @@ function PhoenixModel({
         <primitive
           object={scene}
           scale={normalizedScale}
-          rotation={[-Math.PI / 12, -Math.PI / 2, Math.PI / 10]}
+          rotation={[-Math.PI / 6, -Math.PI / 5, Math.PI / 10]}
         />
       </Center>
     </group>
