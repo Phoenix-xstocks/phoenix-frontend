@@ -18,6 +18,8 @@ const config: Config = {
         loss: '#ef4444',
         accent: '#06b6d4',
         'accent-dim': '#0891b2',
+        phoenix: '#ff6b35',
+        'phoenix-dim': '#e55a2b',
         muted: '#6b7280',
       },
       fontFamily: {
