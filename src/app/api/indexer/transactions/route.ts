@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql } from '@/lib/db';
+import { getSQL } from '@/lib/db';
 import { parseEventParams } from '@/lib/parse-event-params';
 import type { IndexerTransactionEvent } from '@/lib/indexer-types';
 
@@ -36,6 +36,7 @@ export async function GET(request: NextRequest) {
   const noteIds = noteIdsParam ? noteIdsParam.split(',').filter(Boolean) : [];
 
   try {
+    const sql = getSQL();
     let rows;
 
     if (noteIds.length > 0) {

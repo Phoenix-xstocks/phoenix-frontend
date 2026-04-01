@@ -26,6 +26,8 @@ export interface UserNote {
   nextObservationTime: bigint;
   currentTriggerBps: bigint;
   couponPerObsBps: bigint;
+  streamedAmount: bigint;
+  withdrawable: bigint;
 }
 
 export function useUserNotes() {
@@ -37,16 +39,17 @@ export function useUserNotes() {
   const fetchNotes = useCallback(async () => {
     if (!address) return [];
 
-    // Step 1: Get user's noteIds from the indexer (O(1) query)
+    // Step 1: Get user's noteIds from the indexer
     const res = await fetch(`/api/indexer/user-notes?address=${address}`);
     if (!res.ok) throw new Error('Failed to fetch user notes from indexer');
     const indexerNotes: IndexerUserNote[] = await res.json();
 
     if (indexerNotes.length === 0) return [];
 
-    const noteIds = indexerNotes.map((n) => n.noteId as `0x${string}`);
-
-    // Step 2: Multicall only for the user's notes (not all notes on-chain)
+    const noteIds = indexerNotes.map((n) =>
+      (n.noteId.startsWith('0x') ? n.noteId : `0x${n.noteId}`) as `0x${string}`,
+    );
+    // Step 2: Multicall for note data + stream IDs
     const noteCalls = noteIds.flatMap((noteId) => [
       {
         address: CONTRACTS.AutocallEngine.address as Address,
@@ -60,14 +63,59 @@ export function useUserNotes() {
         functionName: 'getNoteStatus' as const,
         args: [noteId],
       },
+      {
+        address: CONTRACTS.CouponStreamer.address as Address,
+        abi: CONTRACTS.CouponStreamer.abi,
+        functionName: 'getNoteStreams' as const,
+        args: [noteId],
+      },
     ]);
 
     const results = await publicClient.multicall({ contracts: noteCalls });
 
+    // Collect all stream IDs across all notes for a second multicall
+    const noteStreamIds: bigint[][] = [];
+    for (let i = 0; i < noteIds.length; i++) {
+      const streamsResult = results[i * 3 + 2];
+      const ids = streamsResult.status === 'success' ? (streamsResult.result as bigint[]) : [];
+      noteStreamIds.push(ids);
+    }
+
+    const allStreamIds = noteStreamIds.flat();
+
+    // Step 3: Fetch streamed + withdrawable for each stream
+    let streamAmounts: Map<string, { streamed: bigint; withdrawable: bigint }> = new Map();
+    if (allStreamIds.length > 0) {
+      const streamCalls = allStreamIds.flatMap((streamId) => [
+        {
+          address: CONTRACTS.CouponStreamer.address as Address,
+          abi: CONTRACTS.CouponStreamer.abi,
+          functionName: 'getStreamedAmount' as const,
+          args: [streamId],
+        },
+        {
+          address: CONTRACTS.CouponStreamer.address as Address,
+          abi: CONTRACTS.CouponStreamer.abi,
+          functionName: 'getWithdrawable' as const,
+          args: [streamId],
+        },
+      ]);
+      const streamResults = await publicClient.multicall({ contracts: streamCalls });
+
+      for (let j = 0; j < allStreamIds.length; j++) {
+        const streamedRes = streamResults[j * 2];
+        const withdrawableRes = streamResults[j * 2 + 1];
+        streamAmounts.set(allStreamIds[j].toString(), {
+          streamed: streamedRes.status === 'success' ? (streamedRes.result as bigint) : 0n,
+          withdrawable: withdrawableRes.status === 'success' ? (withdrawableRes.result as bigint) : 0n,
+        });
+      }
+    }
+
     const userNotes: UserNote[] = [];
     for (let i = 0; i < noteIds.length; i++) {
-      const noteResult = results[i * 2];
-      const statusResult = results[i * 2 + 1];
+      const noteResult = results[i * 3];
+      const statusResult = results[i * 3 + 1];
 
       if (noteResult.status !== 'success' || statusResult.status !== 'success') continue;
 
@@ -76,6 +124,17 @@ export function useUserNotes() {
 
       const [, , nextObservationTime, currentTriggerBps, couponPerObsBps] =
         statusResult.result as [number, number, bigint, bigint, bigint];
+
+      // Sum streamed + withdrawable across all streams for this note
+      let streamedAmount = 0n;
+      let withdrawable = 0n;
+      for (const sid of noteStreamIds[i]) {
+        const amounts = streamAmounts.get(sid.toString());
+        if (amounts) {
+          streamedAmount += amounts.streamed;
+          withdrawable += amounts.withdrawable;
+        }
+      }
 
       userNotes.push({
         noteId: noteIds[i],
@@ -90,6 +149,8 @@ export function useUserNotes() {
         nextObservationTime,
         currentTriggerBps,
         couponPerObsBps,
+        streamedAmount,
+        withdrawable,
       });
     }
 

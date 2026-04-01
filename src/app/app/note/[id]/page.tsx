@@ -110,7 +110,9 @@ export default function NoteDetailPage({ params }: { params: { id: string } }) {
 
         <NoteEventTimeline events={noteEvents} isLoading={isLoadingEvents} />
 
-        <NoteActions note={note} noteId={noteId} />
+        {note.state !== NoteState.Active && note.state !== NoteState.ObservationPending && (
+          <NoteActions note={note} noteId={noteId} />
+        )}
       </div>
     </PageContainer>
   );

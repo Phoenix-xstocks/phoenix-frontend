@@ -1,12 +1,12 @@
 export const BASKET_ASSETS = {
   NASDAQx: {
-    address: '0x3EfB67e01d5Ab3dd37dBb34D8a8c09D0682Bfc4E' as const,
+    address: '0x267ED9BC43B16D832cB9Aaf0e3445f0cC9f536d9' as const,
     symbol: 'NASDAQx',
     name: 'Nasdaq 100',
     color: '#0096D6',
   },
   SPXx: {
-    address: '0x2a968432b2BC26dA460A0B7262414552288C894E' as const,
+    address: '0x9eF9f9B22d3CA9769e28e769e2AAA3C2B0072D0e' as const,
     symbol: 'SPXx',
     name: 'S&P 500',
     color: '#E3242B',

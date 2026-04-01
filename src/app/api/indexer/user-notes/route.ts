@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql } from '@/lib/db';
+import { getSQL } from '@/lib/db';
 import type { IndexerUserNote } from '@/lib/indexer-types';
 
 export async function GET(request: NextRequest) {
@@ -10,6 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const sql = getSQL();
     const rows = await sql`
       WITH user_notes AS (
         SELECT

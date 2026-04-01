@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql } from '@/lib/db';
+import { getSQL } from '@/lib/db';
 import { parseEventParams } from '@/lib/parse-event-params';
 import type { IndexerEvent } from '@/lib/indexer-types';
 
@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
+    const sql = getSQL();
     const rows = await sql`
       SELECT id, event_signature, event_params, block_number, block_timestamp, transaction_hash
       FROM indexer.engine_events
