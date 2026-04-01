@@ -1,10 +1,12 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { useAccount, usePublicClient } from 'wagmi';
-import { type Address } from 'viem';
+import { useAccount } from 'wagmi';
+import { createPublicClient, http, type Address } from 'viem';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
+
+const LOG_BLOCK_RANGE = 90_000n;
 
 export type TransactionEventType = 'deposit' | 'coupon' | 'settlement';
 
@@ -16,16 +18,22 @@ export interface TransactionEvent {
   txHash: `0x${string}`;
 }
 
+const publicClient = createPublicClient({
+  chain: inkSepolia,
+  transport: http(),
+});
+
 export function useTransactionHistory(userNoteIds: `0x${string}`[]) {
   const { address, isConnected } = useAccount();
-  const publicClient = usePublicClient({ chainId: inkSepolia.id });
   const [events, setEvents] = useState<TransactionEvent[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchHistory = useCallback(async () => {
-    if (!publicClient || !address) return [];
+    if (!address) return [];
 
     const engineAddress = CONTRACTS.AutocallEngine.address as Address;
+    const currentBlock = await publicClient.getBlockNumber();
+    const fromBlock = currentBlock > LOG_BLOCK_RANGE ? currentBlock - LOG_BLOCK_RANGE : 0n;
 
     const createdLogs = await publicClient.getLogs({
       address: engineAddress,
@@ -39,7 +47,7 @@ export function useTransactionHistory(userNoteIds: `0x${string}`[]) {
         ],
       },
       args: { holder: address },
-      fromBlock: 0n,
+      fromBlock,
       toBlock: 'latest',
     });
 
@@ -67,7 +75,7 @@ export function useTransactionHistory(userNoteIds: `0x${string}`[]) {
           ],
         },
         args: { noteId: userNoteIds },
-        fromBlock: 0n,
+        fromBlock,
         toBlock: 'latest',
       });
 
@@ -91,7 +99,7 @@ export function useTransactionHistory(userNoteIds: `0x${string}`[]) {
           ],
         },
         args: { noteId: userNoteIds },
-        fromBlock: 0n,
+        fromBlock,
         toBlock: 'latest',
       });
 
@@ -107,10 +115,10 @@ export function useTransactionHistory(userNoteIds: `0x${string}`[]) {
     const all = [...depositEvents, ...couponEvents, ...settleEvents];
     all.sort((a, b) => Number(b.blockNumber - a.blockNumber));
     return all.slice(0, 10);
-  }, [publicClient, address, userNoteIds]);
+  }, [address, userNoteIds]);
 
   useEffect(() => {
-    if (!isConnected || !address || !publicClient) {
+    if (!isConnected || !address) {
       setEvents([]);
       return;
     }
@@ -136,7 +144,7 @@ export function useTransactionHistory(userNoteIds: `0x${string}`[]) {
       cancelled = true;
       clearInterval(interval);
     };
-  }, [isConnected, address, publicClient, fetchHistory]);
+  }, [isConnected, address, fetchHistory]);
 
   return { events, isLoading };
 }

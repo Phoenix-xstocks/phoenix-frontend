@@ -1,11 +1,16 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { useAccount, usePublicClient } from 'wagmi';
-import { type Address } from 'viem';
+import { useAccount } from 'wagmi';
+import { createPublicClient, http, type Address } from 'viem';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
 import { type NoteState } from '@/lib/noteStates';
+
+const publicClient = createPublicClient({
+  chain: inkSepolia,
+  transport: http(),
+});
 
 export interface UserNote {
   noteId: `0x${string}`;
@@ -24,13 +29,12 @@ export interface UserNote {
 
 export function useUserNotes() {
   const { address, isConnected } = useAccount();
-  const publicClient = usePublicClient({ chainId: inkSepolia.id });
   const [notes, setNotes] = useState<UserNote[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
   const fetchNotes = useCallback(async () => {
-    if (!publicClient || !address) return [];
+    if (!address) return [];
 
     const count = Number(
       await publicClient.readContract({
@@ -106,7 +110,7 @@ export function useUserNotes() {
   }, [publicClient, address]);
 
   useEffect(() => {
-    if (!isConnected || !address || !publicClient) {
+    if (!isConnected || !address) {
       setNotes([]);
       return;
     }
