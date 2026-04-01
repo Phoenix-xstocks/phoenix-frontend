@@ -1,6 +1,6 @@
 'use client';
 
-import { XSTOCKS, FLAGSHIP_BASKET } from '@/lib/constants';
+import { BASKET_ASSETS, FLAGSHIP_BASKET } from '@/lib/constants';
 import { TokenIcon } from '@/components/ui/TokenIcon';
 
 interface BasketSelectorProps {
@@ -8,7 +8,7 @@ interface BasketSelectorProps {
   onChange: (basket: string[]) => void;
 }
 
-const xStockList = Object.values(XSTOCKS);
+const assetList = Object.values(BASKET_ASSETS);
 
 export function BasketSelector({ selected, onChange }: BasketSelectorProps) {
   const toggleToken = (address: string) => {
@@ -30,7 +30,7 @@ export function BasketSelector({ selected, onChange }: BasketSelectorProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-muted-foreground">Select Basket Tokens</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">Select Basket Indices</h3>
         <button
           onClick={selectFlagship}
           className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all border ${
@@ -43,8 +43,8 @@ export function BasketSelector({ selected, onChange }: BasketSelectorProps) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {xStockList.map((token) => {
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {assetList.map((token) => {
           const isSelected = selected.includes(token.address);
           return (
             <button
@@ -67,7 +67,7 @@ export function BasketSelector({ selected, onChange }: BasketSelectorProps) {
       </div>
 
       {selected.length === 0 && (
-        <p className="text-xs text-loss">Select at least one token for the basket.</p>
+        <p className="text-xs text-loss">Select at least one index for the basket.</p>
       )}
     </div>
   );

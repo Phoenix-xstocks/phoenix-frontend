@@ -1,6 +1,6 @@
 'use client';
 
-import { XSTOCKS, PROTOCOL_CONSTANTS } from '@/lib/constants';
+import { BASKET_ASSETS, PROTOCOL_CONSTANTS } from '@/lib/constants';
 import { formatUSDC } from '@/lib/format';
 import { TokenIcon } from '@/components/ui/TokenIcon';
 import { CountdownTimer } from '@/components/ui/CountdownTimer';
@@ -17,7 +17,7 @@ interface DepositStatusTrackerProps {
 }
 
 const xStocksByAddress = Object.fromEntries(
-  Object.values(XSTOCKS).map((t) => [t.address.toLowerCase(), t])
+  Object.values(BASKET_ASSETS).map((t) => [t.address.toLowerCase(), t])
 );
 
 export function DepositStatusTracker({

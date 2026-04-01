@@ -5,11 +5,11 @@ import { TokenIcon } from '@/components/ui/TokenIcon';
 import { MonoNumber } from '@/components/ui/MonoNumber';
 import { formatUSDC, shortenAddress } from '@/lib/format';
 import { NOTE_STATE_CONFIG, NoteState } from '@/lib/noteStates';
-import { XSTOCKS } from '@/lib/constants';
+import { BASKET_ASSETS } from '@/lib/constants';
 import type { NoteDetail } from '@/hooks/useNoteDetail';
 
 const ADDRESS_TO_SYMBOL: Record<string, string> = Object.fromEntries(
-  Object.values(XSTOCKS).map((s) => [s.address.toLowerCase(), s.symbol])
+  Object.values(BASKET_ASSETS).map((s) => [s.address.toLowerCase(), s.symbol])
 );
 
 function formatDate(timestamp: bigint): string {

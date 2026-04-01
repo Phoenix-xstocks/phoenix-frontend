@@ -1,5 +1,5 @@
 import { TokenIcon } from './TokenIcon';
-import { XSTOCKS } from '@/lib/constants';
+import { BASKET_ASSETS } from '@/lib/constants';
 
 interface BasketIconsProps {
   addresses: readonly string[];
@@ -7,7 +7,7 @@ interface BasketIconsProps {
 }
 
 const addressToSymbol: Record<string, string> = Object.fromEntries(
-  Object.values(XSTOCKS).map((s) => [s.address.toLowerCase(), s.symbol])
+  Object.values(BASKET_ASSETS).map((s) => [s.address.toLowerCase(), s.symbol])
 );
 
 export function BasketIcons({ addresses, size = 'sm' }: BasketIconsProps) {

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { HeroScene } from "@/components/hero-scene"
+import { CouponCounter } from "@/components/landing/CouponCounter"
 
 function useInView(ref: React.RefObject<HTMLElement | null>, threshold = 0.3) {
   const [visible, setVisible] = useState(false)
@@ -108,27 +109,14 @@ export default function Home() {
         {() => (
           <div className="max-w-4xl text-center space-y-8">
             <FadeSlide show={true} direction="up">
-              <pre className="hidden md:block text-[0.5rem] lg:text-[0.65rem] leading-[1.15] font-mono text-white drop-shadow-lg whitespace-pre text-center select-none" aria-label="Phoenix Protocol">{`██████╗ ██╗  ██╗ ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗
-██╔══██╗██║  ██║██╔═══██╗██╔════╝████╗  ██║██║╚██╗██╔╝
-██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝
-██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗
-██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
-╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
-
-██████╗ ██████╗  ██████╗ ████████╗ ██████╗  ██████╗ ██████╗ ██╗
-██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗██╔════╝██╔═══██╗██║
-██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
-██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
-██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝╚██████╗╚██████╔╝███████╗
-╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝  ╚═════╝ ╚═════╝ ╚══════╝`}</pre>
-              <h1 className="md:hidden text-5xl font-bold tracking-tight text-center drop-shadow-lg text-white">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-center drop-shadow-lg text-white">
                 Phoenix Protocol
               </h1>
             </FadeSlide>
             <FadeSlide show={true} direction="up" delay={200}>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed drop-shadow-md">
                 Permissionless autocall structured products on Ink.
-                Earn 8.5-13% APY on a worst-of basket of tokenized equities
+                Earn 8.5-13% APY on a worst-of basket of tokenized indices
                 with delta-neutral hedging and real-time coupon streaming.
               </p>
             </FadeSlide>
@@ -159,8 +147,8 @@ export default function Home() {
                   <p className="text-muted-foreground mt-2 text-[10px]">Maturity</p>
                 </div>
                 <div className="backdrop-blur-sm rounded-lg p-6 text-center">
-                  <p className="text-lg font-bold">3 assets</p>
-                  <p className="text-muted-foreground mt-2 text-[10px]">Flagship basket</p>
+                  <p className="text-lg font-bold">2 indices</p>
+                  <p className="text-muted-foreground mt-2 text-[10px]">Nasdaq + S&P 500</p>
                 </div>
               </div>
             </FadeSlide>
@@ -227,7 +215,7 @@ export default function Home() {
             </FadeSlide>
             <FadeSlide show={visible} direction="up" delay={300}>
               <p className="text-[10px] md:text-xs text-muted-foreground leading-relaxed drop-shadow-md">
-                Phoenix&apos;s flagship basket tracks 3 tokenized equities. As long as none
+                Phoenix&apos;s flagship basket tracks 2 tokenized indices (Nasdaq 100 &amp; S&amp;P 500). As long as none
                 of them drops below the knock-in barrier (typically 60-70% of the
                 initial price), your principal is fully protected.
               </p>
@@ -287,6 +275,9 @@ export default function Home() {
                 accrued coupons at any time. This is DeFi-native structured finance:
                 transparent, composable, and always accessible.
               </p>
+            </FadeSlide>
+            <FadeSlide show={visible} direction="up" delay={450}>
+              <CouponCounter visible={visible} />
             </FadeSlide>
           </div>
         )}

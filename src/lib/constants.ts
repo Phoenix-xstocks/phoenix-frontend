@@ -1,52 +1,21 @@
-export const XSTOCKS = {
-  NVDAx: {
+export const BASKET_ASSETS = {
+  NASDAQx: {
     address: '0x3EfB67e01d5Ab3dd37dBb34D8a8c09D0682Bfc4E' as const,
-    symbol: 'NVDAx',
-    name: 'NVIDIA',
-    color: '#76b900',
+    symbol: 'NASDAQx',
+    name: 'Nasdaq 100',
+    color: '#0096D6',
   },
-  TSLAx: {
+  SPXx: {
     address: '0x2a968432b2BC26dA460A0B7262414552288C894E' as const,
-    symbol: 'TSLAx',
-    name: 'Tesla',
-    color: '#cc0000',
-  },
-  METAx: {
-    address: '0x7EA9266A024e168341827a9c4621EC5b16cda65a' as const,
-    symbol: 'METAx',
-    name: 'Meta',
-    color: '#0668E1',
-  },
-  AAPLx: {
-    address: '0x0000000000000000000000000000000000000001' as const,
-    symbol: 'AAPLx',
-    name: 'Apple',
-    color: '#A2AAAD',
-  },
-  MSFTx: {
-    address: '0x0000000000000000000000000000000000000002' as const,
-    symbol: 'MSFTx',
-    name: 'Microsoft',
-    color: '#00A4EF',
-  },
-  AMZNx: {
-    address: '0x0000000000000000000000000000000000000003' as const,
-    symbol: 'AMZNx',
-    name: 'Amazon',
-    color: '#FF9900',
-  },
-  GOOGLx: {
-    address: '0x0000000000000000000000000000000000000004' as const,
-    symbol: 'GOOGLx',
-    name: 'Google',
-    color: '#4285F4',
+    symbol: 'SPXx',
+    name: 'S&P 500',
+    color: '#E3242B',
   },
 } as const;
 
 export const FLAGSHIP_BASKET = [
-  XSTOCKS.NVDAx.address,
-  XSTOCKS.TSLAx.address,
-  XSTOCKS.METAx.address,
+  BASKET_ASSETS.NASDAQx.address,
+  BASKET_ASSETS.SPXx.address,
 ] as const;
 
 export const PROTOCOL_CONSTANTS = {

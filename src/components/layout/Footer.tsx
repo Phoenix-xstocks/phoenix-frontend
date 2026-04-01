@@ -5,7 +5,7 @@ const FOOTER_COLUMNS = [
   {
     title: 'Protocol',
     links: [
-      { label: 'App', href: '/deposit' },
+      { label: 'App', href: '/app/deposit' },
       { label: 'Documentation', href: '#' },
       { label: 'Whitepaper', href: '#' },
       { label: 'Smart Contracts', href: '#' },
@@ -14,7 +14,7 @@ const FOOTER_COLUMNS = [
   {
     title: 'Data & Analytics',
     links: [
-      { label: 'Dashboard', href: '/dashboard' },
+      { label: 'Dashboard', href: '/app/dashboard' },
       { label: 'Dune', href: '#' },
       { label: 'DeFi Llama', href: '#' },
     ],
