@@ -81,6 +81,19 @@ function PhoenixModel({
 
     const scaleMultiplier = centerMode ? 0.35 : 0.25
 
+    // 9 waypoints = 9 snap sections, alternating left-right
+    const waypoints: [number, number][] = [
+      [0.0, -0.15],   // 1 Hero: center
+      [1.5, -0.3],    // 2 The Opportunity: right
+      [-1.3, 0.3],    // 3 What is an Autocall: left
+      [1.4, -0.5],    // 4 Worst-of Basket: right
+      [-1.5, 0.1],    // 5 Delta-Neutral: left
+      [1.3, -0.2],    // 6 Real-Time Coupon: right
+      [-1.4, 0.2],    // 7 Structured Scenario: left
+      [1.5, -0.4],    // 8 FAQ: right
+      [-1.5, 0.1],    // 9 Footer: left
+    ]
+
     if (centerMode) {
       // Center mode: phoenix stays centered, gently gliding
       const idleBob = Math.sin(elapsed * 0.8) * 0.06
@@ -97,16 +110,6 @@ function PhoenixModel({
       groupRef.current.rotation.x = -0.1 - smoothMouse.current.y * 0.03
       groupRef.current.rotation.z = bankZ
     } else {
-      // 5 waypoints = 5 snap sections (t=0, 0.25, 0.5, 0.75, 1.0)
-      // Each snap lands exactly on a waypoint
-      const waypoints: [number, number][] = [
-        [-1.4, 0.0],    // section 1: left
-        [1.5, -0.5],    // section 2: right, low
-        [-1.3, 0.3],    // section 3: left, high
-        [1.4, -0.3],    // section 4: right
-        [-1.5, 0.1],    // section 5: left
-      ]
-
       // Catmull-Rom spline for perfectly smooth curves through all waypoints
       const catmullRom = (p0: number, p1: number, p2: number, p3: number, t: number) => {
         const t2 = t * t
@@ -140,11 +143,24 @@ function PhoenixModel({
       groupRef.current.position.x = posX
       groupRef.current.position.y = posY + idleBob
 
+      // Blend between hero pose (face camera) and normal pose (side profile)
+      const heroBlend = Math.max(0, 1 - clampedT * 10)
+
       // Bank into the direction of movement for a natural flight feel
       const bankZ = -Math.cos(t * Math.PI * 2) * 0.15 * Math.min(scrollSpeed.current * 3, 1)
-      const rotY = Math.PI / 2
+
+      // Hero: rotY=0 (face us), Normal: rotY=PI/2 (side profile)
+      const normalRotY = Math.PI / 2
+      const heroRotY = 0
+      const rotY = MathUtils.lerp(normalRotY, heroRotY, heroBlend)
+
+      // Hero: slightly tilted back, Normal: slight forward tilt
+      const normalRotX = -0.1
+      const heroRotX = -0.3
+      const rotX = MathUtils.lerp(normalRotX, heroRotX, heroBlend)
+
       groupRef.current.rotation.y = rotY + smoothMouse.current.x * 0.1
-      groupRef.current.rotation.x = -0.1 - smoothMouse.current.y * 0.05
+      groupRef.current.rotation.x = rotX - smoothMouse.current.y * 0.05
       groupRef.current.rotation.z = bankZ
     }
   })
