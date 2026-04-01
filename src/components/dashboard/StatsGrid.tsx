@@ -1,8 +1,8 @@
 'use client';
 
-import { StatCard } from '@/components/ui/StatCard';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { formatUSDC, formatUSDCCompact, formatBps } from '@/lib/format';
+import { formatUSDCCompact, formatBps } from '@/lib/format';
+import { TARGET_APY_BPS } from '@/lib/constants';
 import type { ProtocolStatsData } from '@/hooks/useProtocolStats';
 
 interface StatsGridProps {
@@ -10,14 +10,31 @@ interface StatsGridProps {
   isLoading: boolean;
 }
 
+interface StatItemProps {
+  label: string;
+  value: string;
+  accent?: boolean;
+}
+
+function StatItem({ label, value, accent }: StatItemProps) {
+  return (
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+      <p className="text-xs text-white/30 uppercase tracking-wide mb-2">{label}</p>
+      <p className={`text-xl font-mono tabular-nums ${accent ? 'text-[#40a040]' : 'text-white'}`}>
+        {value}
+      </p>
+    </div>
+  );
+}
+
 export function StatsGrid({ stats, isLoading }: StatsGridProps) {
   if (isLoading || !stats) {
     return (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5">
-            <Skeleton className="h-4 w-24 mb-2" />
-            <Skeleton className="h-8 w-32" />
+          <div key={i} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+            <Skeleton className="h-3 w-20 mb-3" />
+            <Skeleton className="h-6 w-24" />
           </div>
         ))}
       </div>
@@ -26,22 +43,21 @@ export function StatsGrid({ stats, isLoading }: StatsGridProps) {
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-      <StatCard
-        label="Total Notes Created"
+      <StatItem
+        label="Target APY"
+        value={`${(TARGET_APY_BPS / 100).toFixed(1)}%`}
+        accent
+      />
+      <StatItem
+        label="Total Notes"
         value={stats.totalNotesCreated.toString()}
       />
-      <StatCard
+      <StatItem
         label="TVL"
-        value={formatUSDCCompact(stats.tvl)}
-        prefix="$"
+        value={`$${formatUSDCCompact(stats.tvl)}`}
       />
-      <StatCard
-        label="Max Deposit Available"
-        value={formatUSDC(stats.maxDeposit)}
-        prefix="$"
-      />
-      <StatCard
-        label="Reserve Level"
+      <StatItem
+        label="Reserve"
         value={formatBps(stats.reserveLevel)}
       />
     </div>

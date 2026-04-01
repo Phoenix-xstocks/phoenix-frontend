@@ -11,10 +11,12 @@ function PhoenixModel({
   scrollY,
   mouseX,
   mouseY,
+  centerMode = false,
 }: {
   scrollY: number
   mouseX: number
   mouseY: number
+  centerMode?: boolean
 }) {
   const groupRef = useRef<Group>(null)
   const { scene, animations } = useGLTF("/phoenix.glb")
@@ -77,56 +79,74 @@ function PhoenixModel({
       mixer.update(0)
     }
 
-    // 5 waypoints = 5 snap sections (t=0, 0.25, 0.5, 0.75, 1.0)
-    // Each snap lands exactly on a waypoint
-    const waypoints: [number, number][] = [
-      [-1.4, 0.0],    // section 1: left
-      [1.5, -0.5],    // section 2: right, low
-      [-1.3, 0.3],    // section 3: left, high
-      [1.4, -0.3],    // section 4: right
-      [-1.5, 0.1],    // section 5: left
-    ]
+    const scaleMultiplier = centerMode ? 0.35 : 0.25
 
-    // Catmull-Rom spline for perfectly smooth curves through all waypoints
-    const catmullRom = (p0: number, p1: number, p2: number, p3: number, t: number) => {
-      const t2 = t * t
-      const t3 = t2 * t
-      return 0.5 * (
-        2 * p1 +
-        (-p0 + p2) * t +
-        (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 +
-        (-p0 + 3 * p1 - 3 * p2 + p3) * t3
-      )
+    if (centerMode) {
+      // Center mode: phoenix stays centered, gently gliding
+      const idleBob = Math.sin(elapsed * 0.8) * 0.06
+      const idleSway = Math.sin(elapsed * 0.3) * 0.15
+
+      groupRef.current.scale.setScalar(scaleMultiplier)
+      groupRef.current.position.x = idleSway
+      groupRef.current.position.y = idleBob
+      groupRef.current.position.z = 0
+
+      const bankZ = Math.sin(elapsed * 0.3) * 0.08
+      const rotY = Math.PI / 2
+      groupRef.current.rotation.y = rotY + smoothMouse.current.x * 0.05
+      groupRef.current.rotation.x = -0.1 - smoothMouse.current.y * 0.03
+      groupRef.current.rotation.z = bankZ
+    } else {
+      // 5 waypoints = 5 snap sections (t=0, 0.25, 0.5, 0.75, 1.0)
+      // Each snap lands exactly on a waypoint
+      const waypoints: [number, number][] = [
+        [-1.4, 0.0],    // section 1: left
+        [1.5, -0.5],    // section 2: right, low
+        [-1.3, 0.3],    // section 3: left, high
+        [1.4, -0.3],    // section 4: right
+        [-1.5, 0.1],    // section 5: left
+      ]
+
+      // Catmull-Rom spline for perfectly smooth curves through all waypoints
+      const catmullRom = (p0: number, p1: number, p2: number, p3: number, t: number) => {
+        const t2 = t * t
+        const t3 = t2 * t
+        return 0.5 * (
+          2 * p1 +
+          (-p0 + p2) * t +
+          (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 +
+          (-p0 + 3 * p1 - 3 * p2 + p3) * t3
+        )
+      }
+
+      const sections = waypoints.length - 1
+      const clampedT = Math.max(0, Math.min(isNaN(t) ? 0 : t, 1))
+      const segment = Math.min(clampedT * sections, sections - 0.001)
+      const idx = Math.floor(segment)
+      const p = segment - idx
+
+      const i0 = Math.max(idx - 1, 0)
+      const i1 = idx
+      const i2 = Math.min(idx + 1, sections)
+      const i3 = Math.min(idx + 2, sections)
+
+      const posX = catmullRom(waypoints[i0][0], waypoints[i1][0], waypoints[i2][0], waypoints[i3][0], p)
+      const posY = catmullRom(waypoints[i0][1], waypoints[i1][1], waypoints[i2][1], waypoints[i3][1], p)
+
+      // Subtle idle bob
+      const idleBob = Math.sin(elapsed * 0.8) * 0.04
+
+      groupRef.current.scale.setScalar(scaleMultiplier)
+      groupRef.current.position.x = posX
+      groupRef.current.position.y = posY + idleBob
+
+      // Bank into the direction of movement for a natural flight feel
+      const bankZ = -Math.cos(t * Math.PI * 2) * 0.15 * Math.min(scrollSpeed.current * 3, 1)
+      const rotY = Math.PI / 2
+      groupRef.current.rotation.y = rotY + smoothMouse.current.x * 0.1
+      groupRef.current.rotation.x = -0.1 - smoothMouse.current.y * 0.05
+      groupRef.current.rotation.z = bankZ
     }
-
-    const sections = waypoints.length - 1
-    const clampedT = Math.max(0, Math.min(isNaN(t) ? 0 : t, 1))
-    const segment = Math.min(clampedT * sections, sections - 0.001)
-    const idx = Math.floor(segment)
-    const p = segment - idx
-
-    const i0 = Math.max(idx - 1, 0)
-    const i1 = idx
-    const i2 = Math.min(idx + 1, sections)
-    const i3 = Math.min(idx + 2, sections)
-
-    const scaleMultiplier = 0.25
-    const posX = catmullRom(waypoints[i0][0], waypoints[i1][0], waypoints[i2][0], waypoints[i3][0], p)
-    const posY = catmullRom(waypoints[i0][1], waypoints[i1][1], waypoints[i2][1], waypoints[i3][1], p)
-
-    // Subtle idle bob
-    const idleBob = Math.sin(elapsed * 0.8) * 0.04
-
-    groupRef.current.scale.setScalar(scaleMultiplier)
-    groupRef.current.position.x = posX
-    groupRef.current.position.y = posY + idleBob
-
-    // Bank into the direction of movement for a natural flight feel
-    const bankZ = -Math.cos(t * Math.PI * 2) * 0.15 * Math.min(scrollSpeed.current * 3, 1)
-    const rotY = Math.PI / 2
-    groupRef.current.rotation.y = rotY + smoothMouse.current.x * 0.1
-    groupRef.current.rotation.x = -0.1 - smoothMouse.current.y * 0.05
-    groupRef.current.rotation.z = bankZ
   })
 
   return (
@@ -142,7 +162,7 @@ function PhoenixModel({
   )
 }
 
-export function EffectScene({ className, scrollProgress = 0 }: { className?: string; scrollProgress?: number }) {
+export function EffectScene({ className, scrollProgress = 0, centerMode = false }: { className?: string; scrollProgress?: number; centerMode?: boolean }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [mousePos, setMousePos] = useState(new Vector2(0, 0))
   const [resolution, setResolution] = useState(new Vector2(1920, 1080))
@@ -207,6 +227,7 @@ export function EffectScene({ className, scrollProgress = 0 }: { className?: str
           scrollY={scrollProgress}
           mouseX={mouseNorm.x}
           mouseY={mouseNorm.y}
+          centerMode={centerMode}
         />
 
         <EffectComposer>

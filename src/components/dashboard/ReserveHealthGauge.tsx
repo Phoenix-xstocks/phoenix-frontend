@@ -10,9 +10,9 @@ interface ReserveHealthGaugeProps {
 
 function getGaugeColor(bps: number): string {
   if (bps < 100) return '#ef4444';
-  if (bps < 300) return '#f97316';
-  if (bps < 1000) return '#eab308';
-  return '#22c55e';
+  if (bps < 300) return '#e04000';
+  if (bps < 1000) return '#e0c040';
+  return '#40a040';
 }
 
 export function ReserveHealthGauge({ reserveLevel, isLoading }: ReserveHealthGaugeProps) {
