@@ -11,6 +11,7 @@ import { parseUnits, decodeEventLog } from 'viem';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
 import { useDepositRequest, RequestStatus } from './useDepositRequest';
+import { useEnsureChain } from './useEnsureChain';
 
 // --- State machine types ---
 
@@ -117,6 +118,7 @@ function depositReducer(
 export function useDepositFlow() {
   const [state, dispatch] = useReducer(depositReducer, initialState);
   const { address } = useAccount();
+  const { ensureChain } = useEnsureChain();
 
   // Check current USDC allowance for the vault
   const { data: allowance } = useReadContract({
@@ -179,9 +181,10 @@ export function useDepositFlow() {
     dispatch({ type: 'SET_BASKET', basket });
   }, []);
 
-  const approve = useCallback(() => {
+  const approve = useCallback(async () => {
     if (!address) return;
     dispatch({ type: 'START_APPROVE' });
+    await ensureChain();
     writeApprove({
       address: CONTRACTS.USDC.address,
       abi: CONTRACTS.USDC.abi,
@@ -189,10 +192,11 @@ export function useDepositFlow() {
       args: [CONTRACTS.XYieldVault.address, amountBigInt],
       chainId: inkSepolia.id,
     });
-  }, [address, amountBigInt, writeApprove]);
+  }, [address, amountBigInt, writeApprove, ensureChain]);
 
-  const requestDeposit = useCallback(() => {
+  const requestDeposit = useCallback(async () => {
     if (!address || state.basket.length === 0) return;
+    await ensureChain();
     writeRequest({
       address: CONTRACTS.XYieldVault.address,
       abi: CONTRACTS.XYieldVault.abi,
@@ -200,11 +204,12 @@ export function useDepositFlow() {
       args: [amountBigInt, address, state.basket],
       chainId: inkSepolia.id,
     });
-  }, [address, amountBigInt, state.basket, writeRequest]);
+  }, [address, amountBigInt, state.basket, writeRequest, ensureChain]);
 
-  const claimDeposit = useCallback(() => {
+  const claimDeposit = useCallback(async () => {
     if (state.requestId === undefined) return;
     dispatch({ type: 'START_CLAIM' });
+    await ensureChain();
     writeClaim({
       address: CONTRACTS.XYieldVault.address,
       abi: CONTRACTS.XYieldVault.abi,
@@ -212,19 +217,19 @@ export function useDepositFlow() {
       args: [state.requestId],
       chainId: inkSepolia.id,
     });
-  }, [state.requestId, writeClaim]);
+  }, [state.requestId, writeClaim, ensureChain]);
 
   const reset = useCallback(() => {
     dispatch({ type: 'RESET' });
   }, []);
 
   // Start the deposit: approve first if needed, otherwise go straight to request
-  const startDeposit = useCallback(() => {
+  const startDeposit = useCallback(async () => {
     if (needsApproval) {
-      approve();
+      await approve();
     } else {
       dispatch({ type: 'APPROVE_CONFIRMED' });
-      requestDeposit();
+      await requestDeposit();
     }
   }, [needsApproval, approve, requestDeposit]);
 
