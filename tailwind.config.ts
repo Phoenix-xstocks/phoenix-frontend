@@ -23,8 +23,9 @@ const config: Config = {
         muted: '#6b7280',
       },
       fontFamily: {
-        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
-        sans: ['Inter', 'sans-serif'],
+        pixel: ['var(--font-geist-pixel-triangle)', 'monospace'],
+        mono: ['var(--font-geist-pixel-triangle)', 'JetBrains Mono', 'Fira Code', 'monospace'],
+        sans: ['var(--font-geist-pixel-triangle)', 'Inter', 'sans-serif'],
       },
     },
   },
