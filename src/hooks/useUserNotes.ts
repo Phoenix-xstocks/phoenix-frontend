@@ -186,6 +186,10 @@ export function useUserNotes() {
         try {
           noteIds = await fetchViaLogs();
         } catch {
+          noteIds = [];
+        }
+
+        if (noteIds.length === 0) {
           noteIds = await fetchViaIteration();
         }
 
