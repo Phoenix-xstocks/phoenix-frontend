@@ -21,17 +21,19 @@ const tokenLogos: Record<string, string> = {
 const tokenColors: Record<string, string> = {
   NASDAQx: 'bg-[#0096D6]/20',
   SPXx: 'bg-[#E3242B]/20',
-  USDC: 'bg-[#2775CA]/20',
 };
+
+const fullCircleLogos = new Set(['USDC']);
 
 export function TokenIcon({ symbol, size = 'md', className = '' }: TokenIconProps) {
   const px = sizeMap[size];
   const logo = tokenLogos[symbol];
 
   if (logo) {
+    const isFull = fullCircleLogos.has(symbol);
     return (
       <div
-        className={`rounded-full flex items-center justify-center overflow-hidden ${tokenColors[symbol] || ''} ${className}`}
+        className={`rounded-full flex items-center justify-center overflow-hidden ${isFull ? '' : tokenColors[symbol] || ''} ${className}`}
         style={{ width: px, height: px }}
       >
         <Image
@@ -39,7 +41,7 @@ export function TokenIcon({ symbol, size = 'md', className = '' }: TokenIconProp
           alt={symbol}
           width={px}
           height={px}
-          className="object-contain p-1"
+          className={isFull ? 'object-cover w-full h-full' : 'object-contain p-1'}
         />
       </div>
     );
