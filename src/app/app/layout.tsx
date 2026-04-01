@@ -1,7 +1,6 @@
 'use client';
 
 import { Dock } from '@/components/layout/Dock';
-import { HeroScene } from '@/components/hero-scene';
 import { Toaster } from 'sonner';
 
 export default function AppLayout({
@@ -11,9 +10,6 @@ export default function AppLayout({
 }) {
   return (
     <>
-      <div className="fixed inset-0 -z-10">
-        <HeroScene scrollProgress={0} centerMode />
-      </div>
       <Dock />
       <div className="relative z-0">
         {children}
