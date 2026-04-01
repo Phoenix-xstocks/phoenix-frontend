@@ -11,7 +11,6 @@ import { EstimatedCoupon } from '@/components/deposit/EstimatedCoupon';
 import { DepositStepper } from '@/components/deposit/DepositStepper';
 import { DepositStatusTracker } from '@/components/deposit/DepositStatusTracker';
 import { TransactionButton } from '@/components/ui/TransactionButton';
-import { HeroScene } from '@/components/hero-scene';
 import { useDepositFlow } from '@/hooks/useDepositFlow';
 import { useTokenBalance } from '@/hooks/useTokenBalance';
 import { useMaxDeposit } from '@/hooks/useMaxDeposit';
@@ -201,13 +200,8 @@ export default function DepositPage() {
   );
 
   return (
-    <>
-      <div className="fixed inset-0 -z-10">
-        <HeroScene scrollProgress={0} centerMode />
-      </div>
-      <PageContainer title="Deposit" subtitle="Create a new autocall note with USDC">
-        {content}
-      </PageContainer>
-    </>
+    <PageContainer title="Deposit" subtitle="Create a new autocall note with USDC">
+      {content}
+    </PageContainer>
   );
 }

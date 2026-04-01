@@ -1,8 +1,13 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { Outfit } from 'next/font/google';
-import { Web3Provider } from '@/providers/Web3Provider';
+import dynamic from 'next/dynamic';
 import './globals.css';
+
+const Web3Provider = dynamic(
+  () => import('@/providers/Web3Provider').then((mod) => mod.Web3Provider),
+  { ssr: false }
+);
 
 const mainFont = localFont({
   src: '../../public/fonts/Inter-Regular.woff2',
