@@ -6,11 +6,19 @@ import { createPublicClient, http, type Address } from 'viem';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
 import { type NoteState } from '@/lib/noteStates';
+import type { IndexerUserNote } from '@/lib/indexer-types';
 
 const publicClient = createPublicClient({
   chain: inkSepolia,
   transport: http(),
 });
+
+export interface StreamInfo {
+  deposit: bigint;
+  startTime: number;
+  endTime: number;
+  withdrawn: bigint;
+}
 
 export interface UserNote {
   noteId: `0x${string}`;
@@ -25,6 +33,7 @@ export interface UserNote {
   nextObservationTime: bigint;
   currentTriggerBps: bigint;
   couponPerObsBps: bigint;
+  streams: StreamInfo[];
 }
 
 export function useUserNotes() {
@@ -36,29 +45,18 @@ export function useUserNotes() {
   const fetchNotes = useCallback(async () => {
     if (!address) return [];
 
-    const count = Number(
-      await publicClient.readContract({
-        address: CONTRACTS.AutocallEngine.address as Address,
-        abi: CONTRACTS.AutocallEngine.abi,
-        functionName: 'getNoteCount',
-      }) as bigint
+    // Step 1: Get user's noteIds from the indexer
+    const res = await fetch(`/api/indexer/user-notes?address=${address}`);
+    if (!res.ok) throw new Error('Failed to fetch user notes from indexer');
+    const indexerNotes: IndexerUserNote[] = await res.json();
+
+    if (indexerNotes.length === 0) return [];
+
+    const noteIds = indexerNotes.map((n) =>
+      (n.noteId.startsWith('0x') ? n.noteId : `0x${n.noteId}`) as `0x${string}`,
     );
-
-    if (count === 0) return [];
-
-    const indexCalls = Array.from({ length: count }, (_, i) => ({
-      address: CONTRACTS.AutocallEngine.address as Address,
-      abi: CONTRACTS.AutocallEngine.abi,
-      functionName: 'noteIds' as const,
-      args: [BigInt(i)],
-    }));
-
-    const idResults = await publicClient.multicall({ contracts: indexCalls });
-    const allIds = idResults
-      .filter((r) => r.status === 'success')
-      .map((r) => r.result as `0x${string}`);
-
-    const noteCalls = allIds.flatMap((noteId) => [
+    // Step 2: Multicall for note data + stream IDs
+    const noteCalls = noteIds.flatMap((noteId) => [
       {
         address: CONTRACTS.AutocallEngine.address as Address,
         abi: CONTRACTS.AutocallEngine.abi,
@@ -71,27 +69,74 @@ export function useUserNotes() {
         functionName: 'getNoteStatus' as const,
         args: [noteId],
       },
+      {
+        address: CONTRACTS.CouponStreamer.address as Address,
+        abi: CONTRACTS.CouponStreamer.abi,
+        functionName: 'getNoteStreams' as const,
+        args: [noteId],
+      },
     ]);
 
     const results = await publicClient.multicall({ contracts: noteCalls });
 
+    // Collect all stream IDs across all notes for a second multicall
+    const noteStreamIds: bigint[][] = [];
+    for (let i = 0; i < noteIds.length; i++) {
+      const streamsResult = results[i * 3 + 2];
+      const ids = streamsResult.status === 'success' ? (streamsResult.result as bigint[]) : [];
+      noteStreamIds.push(ids);
+    }
+
+    const allStreamIds = noteStreamIds.flat();
+
+    // Step 3: Fetch stream params for each stream
+    let streamInfoMap: Map<string, StreamInfo> = new Map();
+    if (allStreamIds.length > 0) {
+      const streamCalls = allStreamIds.map((streamId) => ({
+        address: CONTRACTS.CouponStreamer.address as Address,
+        abi: CONTRACTS.CouponStreamer.abi,
+        functionName: 'getStream' as const,
+        args: [streamId],
+      }));
+      const streamResults = await publicClient.multicall({ contracts: streamCalls });
+
+      for (let j = 0; j < allStreamIds.length; j++) {
+        const res = streamResults[j];
+        if (res.status !== 'success') continue;
+        const [, deposit, startTime, endTime, withdrawn, canceled] = res.result as [
+          string, bigint, number, number, bigint, boolean,
+        ];
+        if (canceled) continue;
+        streamInfoMap.set(allStreamIds[j].toString(), {
+          deposit,
+          startTime: Number(startTime),
+          endTime: Number(endTime),
+          withdrawn,
+        });
+      }
+    }
+
     const userNotes: UserNote[] = [];
-    for (let i = 0; i < allIds.length; i++) {
-      const noteResult = results[i * 2];
-      const statusResult = results[i * 2 + 1];
+    for (let i = 0; i < noteIds.length; i++) {
+      const noteResult = results[i * 3];
+      const statusResult = results[i * 3 + 1];
 
       if (noteResult.status !== 'success' || statusResult.status !== 'success') continue;
 
-      const [basket, notional, holder, state, observations, memoryCoupon, totalCouponBps, createdAt, maturityDate] =
+      const [basket, notional, , state, observations, memoryCoupon, totalCouponBps, createdAt, maturityDate] =
         noteResult.result as [readonly string[], bigint, string, number, number, bigint, bigint, bigint, bigint];
-
-      if (holder.toLowerCase() !== address.toLowerCase()) continue;
 
       const [, , nextObservationTime, currentTriggerBps, couponPerObsBps] =
         statusResult.result as [number, number, bigint, bigint, bigint];
 
+      const streams: StreamInfo[] = [];
+      for (const sid of noteStreamIds[i]) {
+        const info = streamInfoMap.get(sid.toString());
+        if (info) streams.push(info);
+      }
+
       userNotes.push({
-        noteId: allIds[i],
+        noteId: noteIds[i],
         basket,
         notional,
         state: state as NoteState,
@@ -103,11 +148,12 @@ export function useUserNotes() {
         nextObservationTime,
         currentTriggerBps,
         couponPerObsBps,
+        streams,
       });
     }
 
     return userNotes;
-  }, [publicClient, address]);
+  }, [address]);
 
   useEffect(() => {
     if (!isConnected || !address) {
@@ -144,7 +190,7 @@ export function useUserNotes() {
       cancelled = true;
       clearInterval(interval);
     };
-  }, [isConnected, address, publicClient, fetchNotes]);
+  }, [isConnected, address, fetchNotes]);
 
   return { notes, isLoading, error };
 }

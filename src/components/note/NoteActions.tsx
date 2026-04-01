@@ -2,9 +2,7 @@
 
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useState } from 'react';
-import { CountdownTimer } from '@/components/ui/CountdownTimer';
 import { TransactionButton } from '@/components/ui/TransactionButton';
-import { formatBps } from '@/lib/format';
 import { NoteState, NOTE_STATE_CONFIG } from '@/lib/noteStates';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
@@ -116,27 +114,6 @@ export function NoteActions({ note, noteId }: NoteActionsProps) {
         </div>
       )}
 
-      {note.state === NoteState.Active && (
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-muted-foreground">Next observation in:</p>
-            <CountdownTimer targetTimestamp={Number(note.nextObservationTime)} />
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Current trigger: {formatBps(note.currentTriggerBps)} | Coupon barrier: {formatBps(PROTOCOL_CONSTANTS.COUPON_BARRIER_BPS)}
-          </p>
-        </div>
-      )}
-
-      {note.state === NoteState.ObservationPending && (
-        <div className="flex items-center gap-3">
-          <div className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-400" />
-          </div>
-          <p className="text-sm text-muted-foreground">Observation window open. Keeper will trigger shortly.</p>
-        </div>
-      )}
 
       {note.state === NoteState.Autocalled && (
         <div className="flex items-center gap-3">
