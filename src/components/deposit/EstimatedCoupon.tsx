@@ -14,27 +14,27 @@ export function EstimatedCoupon({ netAmount }: EstimatedCouponProps) {
   const apyPercent = (TARGET_APY_BPS / 100).toFixed(1);
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-4 space-y-4">
-      <h3 className="text-sm font-medium text-muted">Estimated Coupon Projection</h3>
+    <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-4 space-y-4">
+      <h3 className="text-sm font-medium text-white/60">Estimated Coupon Projection</h3>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1">
-          <div className="text-xs text-muted">APY</div>
-          <MonoNumber value={`${apyPercent}%`} size="lg" className="text-accent" />
+          <div className="text-xs text-white/40">APY</div>
+          <MonoNumber value={`${apyPercent}%`} size="lg" className="text-white" />
         </div>
 
         <div className="space-y-1">
-          <div className="text-xs text-muted">Estimated Annual Yield</div>
-          <MonoNumber value={formatUSDC(annualYield)} prefix="$" size="lg" className="text-gain" />
+          <div className="text-xs text-white/40">Estimated Annual Yield</div>
+          <MonoNumber value={formatUSDC(annualYield)} prefix="$" size="lg" className="text-white/90" />
         </div>
       </div>
 
-      <div className="flex items-center justify-between pt-2 border-t border-border">
-        <span className="text-sm text-muted">Monthly Equivalent</span>
-        <MonoNumber value={formatUSDC(monthlyYield)} prefix="~$" suffix="/ mo" size="sm" className="text-white" />
+      <div className="flex items-center justify-between pt-2 border-t border-white/10">
+        <span className="text-sm text-white/60">Monthly Equivalent</span>
+        <MonoNumber value={formatUSDC(monthlyYield)} prefix="~$" suffix="/ mo" size="sm" className="text-white/70" />
       </div>
 
-      <p className="text-xs text-muted/70 leading-relaxed">
+      <p className="text-xs text-white/30 leading-relaxed">
         Estimates based on current market conditions. Actual returns depend on observation outcomes.
       </p>
     </div>

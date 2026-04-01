@@ -1,11 +1,18 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import { Outfit } from 'next/font/google';
 import { Web3Provider } from '@/providers/Web3Provider';
 import './globals.css';
 
 const fkGrotesk = localFont({
   src: '../../public/fonts/FKGrotesk.woff2',
   variable: '--font-fk-grotesk',
+  display: 'swap',
+});
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  variable: '--font-outfit',
   display: 'swap',
 });
 
@@ -20,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${fkGrotesk.variable}`}>
+    <html lang="en" className={`dark ${fkGrotesk.variable} ${outfit.variable}`}>
       <body className="min-h-screen antialiased">
         <Web3Provider>
           {children}

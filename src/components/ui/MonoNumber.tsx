@@ -15,7 +15,7 @@ const sizeClasses = {
 
 export function MonoNumber({ value, prefix, suffix, className = '', size = 'md' }: MonoNumberProps) {
   return (
-    <span className={`font-mono tabular-nums ${sizeClasses[size]} ${className}`}>
+    <span className={`font-outfit tabular-nums ${sizeClasses[size]} ${className}`}>
       {prefix && <span className="text-muted-foreground">{prefix}</span>}
       {value}
       {suffix && <span className="text-muted-foreground ml-1">{suffix}</span>}
