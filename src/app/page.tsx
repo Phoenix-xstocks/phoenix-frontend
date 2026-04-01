@@ -133,16 +133,18 @@ export default function Home() {
         </div>
 
         {/* Subtitle at bottom */}
-        <div className="pb-12 text-center z-10">
+        <div className="pb-6 text-center z-10">
           <FadeSlide show={true} direction="up" delay={300}>
             <p className="text-[9px] md:text-xs text-muted-foreground drop-shadow-md">
-              Permissionless Autocall Structured Products on Ink
+              Autocall Structured Products on Ink
             </p>
           </FadeSlide>
           <FadeSlide show={true} direction="up" delay={400}>
-            <p className="text-[7px] text-white/30 mt-3 uppercase tracking-[0.3em]">
-              Scroll
-            </p>
+            <div className="mt-6 flex justify-center">
+              <div className="w-6 h-10 rounded-full border-2 border-white/60 flex justify-center">
+                <div className="w-1 h-2 rounded-full bg-white mt-2 animate-[scrollDown_1.5s_ease-in-out_infinite]" />
+              </div>
+            </div>
           </FadeSlide>
         </div>
       </section>
