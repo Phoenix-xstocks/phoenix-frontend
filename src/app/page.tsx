@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
 import { HeroScene } from "@/components/hero-scene"
 
 function useScrollProgress() {
@@ -88,19 +87,17 @@ export default function Home() {
           </FadeSlide>
           <FadeSlide show={showButtons} direction="up" delay={150}>
             <div className="flex gap-4 justify-center pt-4">
-              <Link href="/deposit">
-                <Button size="lg" className="text-base px-8">
-                  Deposit USDC
-                </Button>
+              <Link
+                href="/deposit"
+                className="px-8 py-3 rounded-lg font-medium text-base bg-white text-black hover:bg-white/90 transition-all"
+              >
+                Deposit USDC
               </Link>
-              <Link href="/dashboard">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="text-base px-8 backdrop-blur-sm"
-                >
-                  Dashboard
-                </Button>
+              <Link
+                href="/dashboard"
+                className="px-8 py-3 rounded-lg font-medium text-base border border-white/20 hover:bg-white/10 backdrop-blur-sm transition-all"
+              >
+                Dashboard
               </Link>
             </div>
           </FadeSlide>
