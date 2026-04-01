@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { ConnectWallet } from '@/components/connect-wallet';
 
@@ -20,9 +21,9 @@ export function Dock() {
         {/* Logo pill */}
         <Link
           href="/"
-          className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-white text-black font-bold text-sm shrink-0 transition-transform duration-200 hover:scale-110"
+          className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-white shrink-0 transition-transform duration-200 hover:scale-110"
         >
-          xY
+          <Image src="/phoenix.svg" alt="Phoenix" width={24} height={24} className="invert" />
         </Link>
 
         {/* Nav items container */}

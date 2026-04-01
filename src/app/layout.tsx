@@ -7,7 +7,7 @@ import { Toaster } from 'sonner';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'xYield Protocol',
+  title: 'Phoenix Protocol',
   description: 'Permissionless Autocall on Tokenized Equities',
 };
 

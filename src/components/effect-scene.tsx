@@ -100,7 +100,8 @@ function PhoenixModel({
     }
 
     const sections = waypoints.length - 1
-    const segment = Math.min(t * sections, sections - 0.001)
+    const clampedT = Math.max(0, Math.min(isNaN(t) ? 0 : t, 1))
+    const segment = Math.min(clampedT * sections, sections - 0.001)
     const idx = Math.floor(segment)
     const p = segment - idx
 

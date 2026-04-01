@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 const MAX_APY = 14; // scale ceiling for bars
 
 const comparisons = [
-  { name: 'xYield Protocol', apy: 12, highlight: true },
+  { name: 'Phoenix Protocol', apy: 12, highlight: true },
   { name: 'Goldman Sachs Autocall', apy: 8, highlight: false },
   { name: 'US Treasury 10Y', apy: 4.5, highlight: false },
 ];

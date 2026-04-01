@@ -75,7 +75,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-8">
             <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold text-accent">xYield</span>
+              <span className="text-xl font-bold text-accent">Phoenix</span>
               <span className="text-xs text-muted font-mono">PROTOCOL</span>
             </Link>
             <div className="hidden md:flex items-center gap-1">
