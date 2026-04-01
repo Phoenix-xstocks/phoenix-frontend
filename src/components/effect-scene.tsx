@@ -34,6 +34,9 @@ function PhoenixModel({
 
   const smoothMouse = useRef({ x: 0, y: 0 })
   const smoothScroll = useRef(0)
+  const prevScroll = useRef(0)
+  const scrollSpeed = useRef(0)
+  const startTime = useRef(Date.now())
 
   const animDuration = useMemo(() => {
     if (animations.length > 0) return animations[0].duration
@@ -53,13 +56,19 @@ function PhoenixModel({
 
     smoothMouse.current.x = MathUtils.lerp(smoothMouse.current.x, mouseX, delta * 1.5)
     smoothMouse.current.y = MathUtils.lerp(smoothMouse.current.y, mouseY, delta * 1.5)
-    smoothScroll.current = MathUtils.lerp(smoothScroll.current, scrollY, delta * 3)
+    smoothScroll.current = MathUtils.lerp(smoothScroll.current, scrollY, delta * 0.8)
 
     const t = smoothScroll.current
 
-    // Drive wing flap animation from scroll
+    // Track scroll speed for wing flap and banking
+    const rawSpeed = Math.abs(smoothScroll.current - prevScroll.current) / Math.max(delta, 0.001)
+    scrollSpeed.current = MathUtils.lerp(scrollSpeed.current, rawSpeed, delta * 3)
+    prevScroll.current = smoothScroll.current
+
+    // Slow constant wing flap
+    const elapsed = (Date.now() - startTime.current) * 0.001
     if (actions && mixer) {
-      const targetTime = (t * 3) % 1 * animDuration
+      const targetTime = (elapsed * 0.12) % 1 * animDuration
       Object.values(actions).forEach((action) => {
         if (!action) return
         action.time = targetTime
@@ -68,44 +77,55 @@ function PhoenixModel({
       mixer.update(0)
     }
 
-    // Scroll-driven flight path:
-    // 0.0-0.15: slightly left and lower, large (hero)
-    // 0.15-0.85: gradually turn and drift right, shrink (long flight)
-    // 0.85-1.0: exit right completely
-    let scaleMultiplier = 1
-    let posX = -0.8
-    let posY = -0.3
-    let rotY = 2.4
+    // 5 waypoints = 5 snap sections (t=0, 0.25, 0.5, 0.75, 1.0)
+    // Each snap lands exactly on a waypoint
+    const waypoints: [number, number][] = [
+      [-1.4, 0.0],    // section 1: left
+      [1.5, -0.5],    // section 2: right, low
+      [-1.3, 0.3],    // section 3: left, high
+      [1.4, -0.3],    // section 4: right
+      [-1.5, 0.1],    // section 5: left
+    ]
 
-    if (t <= 0.15) {
-      // Phase 1: big, full profile view facing right
-      scaleMultiplier = 1
-      posX = -0.8
-      posY = -1.5
-      rotY = 2.4
-    } else if (t <= 0.85) {
-      // Phase 2: long flight - turn and drift right, shrink
-      const p = (t - 0.15) / 0.7
-      scaleMultiplier = MathUtils.lerp(1, 0.4, p)
-      posX = MathUtils.lerp(-0.8, 3.5, p)
-      posY = MathUtils.lerp(-1.5, 0.3, Math.sin(p * Math.PI))
-      rotY = MathUtils.lerp(2.4, 2.8, p)
-    } else {
-      // Phase 3: exit right
-      const p = (t - 0.85) / 0.15
-      scaleMultiplier = MathUtils.lerp(0.4, 0.15, p)
-      posX = MathUtils.lerp(3.5, 8, p)
-      posY = MathUtils.lerp(0, 0.8, p)
-      rotY = MathUtils.lerp(1.2, 1.6, p)
+    // Catmull-Rom spline for perfectly smooth curves through all waypoints
+    const catmullRom = (p0: number, p1: number, p2: number, p3: number, t: number) => {
+      const t2 = t * t
+      const t3 = t2 * t
+      return 0.5 * (
+        2 * p1 +
+        (-p0 + p2) * t +
+        (2 * p0 - 5 * p1 + 4 * p2 - p3) * t2 +
+        (-p0 + 3 * p1 - 3 * p2 + p3) * t3
+      )
     }
+
+    const sections = waypoints.length - 1
+    const segment = Math.min(t * sections, sections - 0.001)
+    const idx = Math.floor(segment)
+    const p = segment - idx
+
+    const i0 = Math.max(idx - 1, 0)
+    const i1 = idx
+    const i2 = Math.min(idx + 1, sections)
+    const i3 = Math.min(idx + 2, sections)
+
+    const scaleMultiplier = 0.25
+    const posX = catmullRom(waypoints[i0][0], waypoints[i1][0], waypoints[i2][0], waypoints[i3][0], p)
+    const posY = catmullRom(waypoints[i0][1], waypoints[i1][1], waypoints[i2][1], waypoints[i3][1], p)
+
+    // Subtle idle bob
+    const idleBob = Math.sin(elapsed * 0.8) * 0.04
 
     groupRef.current.scale.setScalar(scaleMultiplier)
     groupRef.current.position.x = posX
-    groupRef.current.position.y = posY + Math.sin(Date.now() * 0.0005) * 0.03
+    groupRef.current.position.y = posY + idleBob
 
-    // Mouse parallax + scroll-driven turn
-    groupRef.current.rotation.y = rotY + smoothMouse.current.x * 0.15
-    groupRef.current.rotation.x = -0.15 - smoothMouse.current.y * 0.08
+    // Bank into the direction of movement for a natural flight feel
+    const bankZ = -Math.cos(t * Math.PI * 2) * 0.15 * Math.min(scrollSpeed.current * 3, 1)
+    const rotY = Math.PI / 2
+    groupRef.current.rotation.y = rotY + smoothMouse.current.x * 0.1
+    groupRef.current.rotation.x = -0.1 - smoothMouse.current.y * 0.05
+    groupRef.current.rotation.z = bankZ
   })
 
   return (
@@ -121,12 +141,11 @@ function PhoenixModel({
   )
 }
 
-export function EffectScene({ className }: { className?: string }) {
+export function EffectScene({ className, scrollProgress = 0 }: { className?: string; scrollProgress?: number }) {
   const containerRef = useRef<HTMLDivElement>(null)
   const [mousePos, setMousePos] = useState(new Vector2(0, 0))
   const [resolution, setResolution] = useState(new Vector2(1920, 1080))
   const [mouseNorm, setMouseNorm] = useState({ x: 0, y: 0 })
-  const [scrollNorm, setScrollNorm] = useState(0)
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!containerRef.current) return
@@ -139,15 +158,8 @@ export function EffectScene({ className }: { className?: string }) {
     setMouseNorm({ x: nx, y: ny })
   }, [])
 
-  const handleScroll = useCallback(() => {
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight
-    const norm = maxScroll > 0 ? window.scrollY / maxScroll : 0
-    setScrollNorm(Math.min(norm, 1))
-  }, [])
-
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove)
-    window.addEventListener("scroll", handleScroll, { passive: true })
 
     const container = containerRef.current
     if (container) {
@@ -163,16 +175,14 @@ export function EffectScene({ className }: { className?: string }) {
 
       return () => {
         window.removeEventListener("mousemove", handleMouseMove)
-        window.removeEventListener("scroll", handleScroll)
         window.removeEventListener("resize", handleResize)
       }
     }
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove)
-      window.removeEventListener("scroll", handleScroll)
     }
-  }, [handleMouseMove, handleScroll])
+  }, [handleMouseMove])
 
   return (
     <div
@@ -193,7 +203,7 @@ export function EffectScene({ className }: { className?: string }) {
         <pointLight position={[0, 2, 3]} intensity={2.5} color="#ff6b35" />
 
         <PhoenixModel
-          scrollY={scrollNorm}
+          scrollY={scrollProgress}
           mouseX={mouseNorm.x}
           mouseY={mouseNorm.y}
         />
@@ -207,7 +217,7 @@ export function EffectScene({ className }: { className?: string }) {
             resolution={resolution}
             mousePos={mousePos}
             postfx={{
-              scanlineIntensity: 0.08,
+              scanlineIntensity: 0.03,
               scanlineCount: 300,
               targetFPS: 0,
               jitterIntensity: 0,
@@ -219,10 +229,10 @@ export function EffectScene({ className }: { className?: string }) {
               vignetteRadius: 1.2,
               colorPalette: 0,
               curvature: 0,
-              aberrationStrength: 0.001,
-              noiseIntensity: 0.03,
+              aberrationStrength: 0.0003,
+              noiseIntensity: 0.01,
               noiseScale: 2,
-              noiseSpeed: 0.5,
+              noiseSpeed: 0.2,
               waveAmplitude: 0,
               waveFrequency: 10,
               waveSpeed: 1,

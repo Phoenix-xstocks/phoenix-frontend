@@ -32,13 +32,13 @@ export function Navbar() {
           {/* Logo pill */}
           <Link
             href="/"
-            className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-phoenix text-background font-bold text-sm shrink-0 transition-transform duration-200 hover:scale-105"
+            className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-white text-black font-bold text-sm shrink-0 transition-transform duration-200 hover:scale-105"
           >
             xY
           </Link>
 
           {/* Nav items container */}
-          <div className="flex items-center h-[42px] rounded-full bg-phoenix px-[3px] gap-[3px]">
+          <div className="flex items-center h-[42px] rounded-full bg-white px-[3px] gap-[3px]">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
               return (
@@ -47,13 +47,13 @@ export function Navbar() {
                   href={link.href}
                   className={`relative flex items-center justify-center h-[36px] px-5 rounded-full text-[13px] font-semibold uppercase tracking-wide whitespace-nowrap transition-all duration-300 ease-out ${
                     isActive
-                      ? 'bg-background text-phoenix'
-                      : 'bg-background/90 text-phoenix/70 hover:bg-background hover:text-phoenix'
+                      ? 'bg-black text-white'
+                      : 'bg-black/80 text-white/70 hover:bg-black hover:text-white'
                   }`}
                 >
                   {link.label}
                   {isActive && (
-                    <span className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-[6px] h-[6px] rounded-full bg-phoenix" />
+                    <span className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-[6px] h-[6px] rounded-full bg-white" />
                   )}
                 </Link>
               );
@@ -61,7 +61,7 @@ export function Navbar() {
           </div>
 
           {/* Connect button pill */}
-          <div className="flex items-center h-[42px] rounded-full bg-phoenix px-2">
+          <div className="flex items-center h-[42px] rounded-full bg-white px-2">
             <ConnectWallet />
           </div>
         </div>

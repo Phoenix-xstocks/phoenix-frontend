@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { GeistPixelTriangle } from 'geist/font/pixel';
 import { Web3Provider } from '@/providers/Web3Provider';
-import { Navbar } from '@/components/layout/Navbar';
+import { Dock } from '@/components/layout/Dock';
 import { Footer } from '@/components/layout/Footer';
 import { Toaster } from 'sonner';
 import './globals.css';
@@ -18,9 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`dark ${GeistPixelTriangle.variable}`}>
-      <body className="min-h-screen flex flex-col antialiased">
+      <body className="min-h-screen antialiased">
         <Web3Provider>
-          <Navbar />
+          <Dock />
           {children}
           <Footer />
           <Toaster

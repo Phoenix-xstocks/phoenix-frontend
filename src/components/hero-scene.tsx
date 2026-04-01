@@ -8,14 +8,14 @@ const EffectScene = dynamic(
   { ssr: false }
 )
 
-export function HeroScene() {
+export function HeroScene({ scrollProgress }: { scrollProgress: number }) {
   return (
     <Suspense
       fallback={
         <div className="w-full h-screen bg-background" />
       }
     >
-      <EffectScene className="w-full h-screen" />
+      <EffectScene className="w-full h-screen" scrollProgress={scrollProgress} />
     </Suspense>
   )
 }
