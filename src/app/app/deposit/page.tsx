@@ -200,13 +200,8 @@ export default function DepositPage() {
   );
 
   return (
-    <>
-      <div className="fixed inset-0 -z-10">
-        <HeroScene scrollProgress={0} centerMode />
-      </div>
-      <PageContainer title="Deposit" subtitle="Create a new autocall note with USDC">
-        {content}
-      </PageContainer>
-    </>
+    <PageContainer title="Deposit" subtitle="Create a new autocall note with USDC">
+      {content}
+    </PageContainer>
   );
 }
