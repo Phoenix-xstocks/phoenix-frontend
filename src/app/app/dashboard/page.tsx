@@ -2,6 +2,7 @@
 
 import { useAccount } from 'wagmi';
 import { PortfolioSummary } from '@/components/dashboard/PortfolioSummary';
+import { YieldStream } from '@/components/dashboard/YieldStream';
 import { NotesList } from '@/components/dashboard/NotesList';
 import { TransactionList } from '@/components/dashboard/TransactionList';
 import { useWalletBalance } from '@/hooks/useWalletBalance';
@@ -38,6 +39,12 @@ export default function DashboardPage() {
         ethFormatted={ethFormatted}
         usdcBalance={usdcBalance}
         notes={notes}
+        isLoading={isLoadingBalance || isLoadingNotes}
+      />
+
+      <YieldStream
+        notes={notes}
+        usdcBalance={usdcBalance}
         isLoading={isLoadingBalance || isLoadingNotes}
       />
 
