@@ -79,7 +79,7 @@ function PhoenixModel({
       mixer.update(0)
     }
 
-    const scaleMultiplier = centerMode ? 0.25 : 0.25
+    const scaleMultiplier = centerMode ? 0.1 : 0.25
 
     // 10 waypoints = 10 snap sections, alternating left-right
     const waypoints: [number, number][] = [
@@ -97,15 +97,15 @@ function PhoenixModel({
 
     if (centerMode) {
       // Center mode: phoenix stays centered, gently gliding
-      const idleBob = Math.sin(elapsed * 0.8) * 0.06
-      const idleSway = Math.sin(elapsed * 0.3) * 0.05
+      const idleBob = Math.sin(elapsed * 0.3) * 0.03
+      const idleSway = Math.sin(elapsed * 0.12) * 0.03
 
       groupRef.current.scale.setScalar(scaleMultiplier)
-      groupRef.current.position.x = idleSway
-      groupRef.current.position.y = idleBob
+      groupRef.current.position.x = -1.2 + idleSway
+      groupRef.current.position.y = 0.4 + idleBob
       groupRef.current.position.z = 0
 
-      const bankZ = Math.sin(elapsed * 0.3) * 0.08
+      const bankZ = Math.sin(elapsed * 0.12) * 0.04
       const rotY = Math.PI / 2
       groupRef.current.rotation.y = rotY + smoothMouse.current.x * 0.05
       groupRef.current.rotation.x = -0.1 - smoothMouse.current.y * 0.03

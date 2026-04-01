@@ -88,139 +88,126 @@ export default function DepositPage() {
     : state.step === 'approving' ? []
     : [];
 
-  // Configure view
-  if (state.step === 'configure' || state.step === 'error') {
-    return (
-      <PageContainer title="Deposit" subtitle="Create a new autocall note with USDC">
-        <div className="flex items-start gap-8">
-          <div className="hidden lg:block w-1/3 sticky top-24">
-            <div className="aspect-square">
-              <HeroScene scrollProgress={0} centerMode className="w-full h-full" />
-            </div>
+  const content = state.step === 'configure' || state.step === 'error' ? (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <BasketSelector
+        selected={state.basket}
+        onChange={(basket) => setBasket(basket as `0x${string}`[])}
+      />
+
+      <AmountInput
+        value={state.amount}
+        onChange={setAmount}
+        balance={usdcBalance}
+      />
+
+      {amountBigInt > 0n && (
+        <>
+          <FeeBreakdown amount={amountBigInt} />
+          <EstimatedCoupon netAmount={netAmount} />
+        </>
+      )}
+
+      {exceedsVaultCapacity && maxDeposit !== undefined && (
+        <div className="bg-loss/10 border border-loss/30 rounded-lg p-4 text-sm text-loss">
+          Exceeds vault capacity. Maximum deposit: ${formatUSDC(maxDeposit)}
+        </div>
+      )}
+
+      {state.error && (
+        <div className="bg-loss/10 border border-loss/30 rounded-lg p-4 text-sm text-loss">
+          {state.error}
+        </div>
+      )}
+
+      {!isConnected ? (
+        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 text-center text-muted-foreground">
+          Connect your wallet to deposit
+        </div>
+      ) : (
+        <TransactionButton
+          label={needsApproval ? 'Approve & Deposit' : 'Deposit'}
+          onClick={startDeposit}
+          disabled={!canDeposit}
+          isLoading={isApproving || isRequesting}
+          className="w-full"
+        />
+      )}
+    </div>
+  ) : (
+    <div className="max-w-2xl mx-auto space-y-6">
+      <DepositStepper currentStep={currentStep} completedSteps={completedSteps} />
+
+      {(state.step === 'approving' || state.step === 'requesting') && (
+        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 text-center">
+          <div className="animate-pulse text-white text-lg mb-2">
+            {state.step === 'approving' ? 'Approving USDC...' : 'Submitting deposit request...'}
           </div>
-          <div className="flex-1 min-w-0 max-w-2xl space-y-6">
-            <BasketSelector
-              selected={state.basket}
-              onChange={(basket) => setBasket(basket as `0x${string}`[])}
-            />
+          <p className="text-sm text-muted-foreground">Please confirm the transaction in your wallet</p>
+          {state.txHash && (
+            <p className="text-xs text-muted-foreground mt-2 font-mono">
+              Tx: {state.txHash.slice(0, 10)}...{state.txHash.slice(-8)}
+            </p>
+          )}
+        </div>
+      )}
 
-            <AmountInput
-              value={state.amount}
-              onChange={setAmount}
-              balance={usdcBalance}
-            />
+      {(state.step === 'pending' || state.step === 'ready' || state.step === 'expired') && (
+        <DepositStatusTracker
+          requestId={state.requestId ?? 0n}
+          amount={amountBigInt}
+          basket={state.basket}
+          requestedAt={depositRequest?.requestedAt !== undefined
+            ? Number(depositRequest.requestedAt)
+            : 0 /* fallback until on-chain data loads */}
+          status={state.step as 'pending' | 'ready' | 'expired'}
+          onClaim={claimDeposit}
+          onRefund={handleRefund}
+        />
+      )}
 
-            {amountBigInt > 0n && (
-              <>
-                <FeeBreakdown amount={amountBigInt} />
-                <EstimatedCoupon netAmount={netAmount} />
-              </>
-            )}
+      {state.step === 'claiming' && (
+        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 text-center">
+          <div className="animate-pulse text-white text-lg mb-2">
+            Claiming your NoteToken...
+          </div>
+          <p className="text-sm text-muted-foreground">Please confirm the transaction in your wallet</p>
+        </div>
+      )}
 
-            {exceedsVaultCapacity && maxDeposit !== undefined && (
-              <div className="bg-loss/10 border border-loss/30 rounded-lg p-4 text-sm text-loss">
-                Exceeds vault capacity. Maximum deposit: ${formatUSDC(maxDeposit)}
-              </div>
-            )}
-
-            {state.error && (
-              <div className="bg-loss/10 border border-loss/30 rounded-lg p-4 text-sm text-loss">
-                {state.error}
-              </div>
-            )}
-
-            {!isConnected ? (
-              <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 text-center text-muted-foreground">
-                Connect your wallet to deposit
-              </div>
-            ) : (
-              <TransactionButton
-                label={needsApproval ? 'Approve & Deposit' : 'Deposit'}
-                onClick={startDeposit}
-                disabled={!canDeposit}
-                isLoading={isApproving || isRequesting}
-                className="w-full"
-              />
-            )}
+      {state.step === 'done' && (
+        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 text-center">
+          <div className="text-gain text-2xl font-bold mb-2">Deposit Complete</div>
+          <p className="text-muted-foreground mb-4">
+            Your NoteToken has been minted. You can view it in My Notes.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <a
+              href="/app/dashboard"
+              className="px-6 py-3 bg-white text-black hover:bg-white/90 rounded-lg font-medium transition-colors"
+            >
+              View My Notes
+            </a>
+            <button
+              onClick={reset}
+              className="px-6 py-3 hover:bg-white/10 text-white rounded-lg font-medium transition-colors border border-white/20 backdrop-blur-sm"
+            >
+              New Deposit
+            </button>
           </div>
         </div>
-      </PageContainer>
-    );
-  }
+      )}
+    </div>
+  );
 
-  // Active flow view (approving, requesting, pending, ready, claiming, done)
   return (
-    <PageContainer title="Deposit" subtitle="Create a new autocall note with USDC">
-      <div className="flex items-start gap-8">
-        <div className="hidden lg:block w-1/3 sticky top-24">
-          <div className="aspect-square">
-            <HeroScene scrollProgress={0} centerMode className="w-full h-full" />
-          </div>
-        </div>
-        <div className="flex-1 min-w-0 max-w-2xl space-y-6">
-          <DepositStepper currentStep={currentStep} completedSteps={completedSteps} />
-
-          {(state.step === 'approving' || state.step === 'requesting') && (
-            <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 text-center">
-              <div className="animate-pulse text-white text-lg mb-2">
-                {state.step === 'approving' ? 'Approving USDC...' : 'Submitting deposit request...'}
-              </div>
-              <p className="text-sm text-muted-foreground">Please confirm the transaction in your wallet</p>
-              {state.txHash && (
-                <p className="text-xs text-muted-foreground mt-2 font-mono">
-                  Tx: {state.txHash.slice(0, 10)}...{state.txHash.slice(-8)}
-                </p>
-              )}
-            </div>
-          )}
-
-          {(state.step === 'pending' || state.step === 'ready' || state.step === 'expired') && (
-            <DepositStatusTracker
-              requestId={state.requestId ?? 0n}
-              amount={amountBigInt}
-              basket={state.basket}
-              requestedAt={depositRequest?.requestedAt !== undefined
-                ? Number(depositRequest.requestedAt)
-                : 0 /* fallback until on-chain data loads */}
-              status={state.step as 'pending' | 'ready' | 'expired'}
-              onClaim={claimDeposit}
-              onRefund={handleRefund}
-            />
-          )}
-
-          {state.step === 'claiming' && (
-            <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 text-center">
-              <div className="animate-pulse text-white text-lg mb-2">
-                Claiming your NoteToken...
-              </div>
-              <p className="text-sm text-muted-foreground">Please confirm the transaction in your wallet</p>
-            </div>
-          )}
-
-          {state.step === 'done' && (
-            <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 text-center">
-              <div className="text-gain text-2xl font-bold mb-2">Deposit Complete</div>
-              <p className="text-muted-foreground mb-4">
-                Your NoteToken has been minted. You can view it in My Notes.
-              </p>
-              <div className="flex gap-4 justify-center">
-                <a
-                  href="/app/dashboard"
-                  className="px-6 py-3 bg-white text-black hover:bg-white/90 rounded-lg font-medium transition-colors"
-                >
-                  View My Notes
-                </a>
-                <button
-                  onClick={reset}
-                  className="px-6 py-3 hover:bg-white/10 text-white rounded-lg font-medium transition-colors border border-white/20 backdrop-blur-sm"
-                >
-                  New Deposit
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+    <>
+      <div className="fixed inset-0 -z-10">
+        <HeroScene scrollProgress={0} centerMode />
       </div>
-    </PageContainer>
+      <PageContainer title="Deposit" subtitle="Create a new autocall note with USDC">
+        {content}
+      </PageContainer>
+    </>
   );
 }

@@ -107,9 +107,9 @@ export default function Home() {
       <section className="h-screen snap-start snap-always relative flex flex-col">
         {/* Top bar: Docs left, Launch App right */}
         <div className="flex items-center justify-between px-8 pt-6 z-10">
-          <a href="#" className="text-sm uppercase tracking-widest text-white/70 hover:text-white transition-colors">
+          <Link href="/docs" className="text-sm uppercase tracking-widest text-white/70 hover:text-white transition-colors">
             Docs
-          </a>
+          </Link>
           <Link
             href="/app/deposit"
             className="px-6 py-2.5 rounded-lg font-medium text-sm bg-white text-black hover:bg-white/90 transition-all"

@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 
 const FOOTER_COLUMNS = [
@@ -43,13 +42,8 @@ export function Footer() {
     <footer className="relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-16 pb-24">
         <div className="flex flex-col md:flex-row gap-12 md:gap-0">
-          {/* Logo */}
-          <div className="md:w-1/4">
-            <Image src="/phoenix.svg" alt="Phoenix" width={32} height={32} className="invert opacity-80" />
-          </div>
-
           {/* Link columns */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 md:w-3/4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-8 w-full">
             {FOOTER_COLUMNS.map((col) => (
               <div key={col.title}>
                 <h4 className="text-sm font-medium text-white mb-5">{col.title}</h4>

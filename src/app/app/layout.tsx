@@ -2,7 +2,6 @@
 
 import { Dock } from '@/components/layout/Dock';
 import { Footer } from '@/components/layout/Footer';
-import { HeroScene } from '@/components/hero-scene';
 import { Toaster } from 'sonner';
 
 export default function AppLayout({
@@ -12,12 +11,6 @@ export default function AppLayout({
 }) {
   return (
     <>
-      <div className="fixed inset-0 -z-10">
-        <HeroScene scrollProgress={0.5} />
-      </div>
-      <div className="fixed -left-[400px] top-1/2 -translate-y-1/2 w-[700px] h-[700px] pointer-events-none" style={{ zIndex: 40 }}>
-        <HeroScene scrollProgress={0} centerMode className="w-full h-full" />
-      </div>
       <Dock />
       <div className="relative z-0">
         {children}
