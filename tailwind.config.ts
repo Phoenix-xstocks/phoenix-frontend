@@ -25,6 +25,7 @@ const config: Config = {
       fontFamily: {
         sans: ['var(--font-fk-grotesk)', 'sans-serif'],
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        outfit: ['var(--font-outfit)', 'sans-serif'],
       },
     },
   },

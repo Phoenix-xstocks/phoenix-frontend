@@ -4,13 +4,9 @@ import { useReadContract } from 'wagmi';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-
 export function useEpochInfo() {
-  const isDeployed = CONTRACTS.EpochManager.address !== ZERO_ADDRESS;
-
   const queryConfig = {
-    enabled: isDeployed,
+    enabled: true,
     refetchInterval: 60_000,
   };
 

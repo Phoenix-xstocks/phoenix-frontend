@@ -8,7 +8,6 @@ import { ConnectWallet } from '@/components/connect-wallet';
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
   { href: '/app/deposit', label: 'Deposit' },
-  { href: '/app/notes', label: 'My Notes' },
   { href: '/app/dashboard', label: 'Dashboard' },
 ];
 
@@ -17,13 +16,13 @@ export function Dock() {
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center gap-[3px]">
-        {/* Logo pill */}
+      <div className="flex items-center gap-8">
+        {/* Logo */}
         <Link
           href="/"
-          className="flex items-center justify-center w-[42px] h-[42px] rounded-full bg-white shrink-0 transition-transform duration-200 hover:scale-110"
+          className="flex items-center justify-center shrink-0 transition-opacity duration-200 hover:opacity-80"
         >
-          <Image src="/phoenix.svg" alt="Phoenix" width={24} height={24} className="invert" />
+          <Image src="/phoenix.svg" alt="Phoenix" width={24} height={24} />
         </Link>
 
         {/* Nav items container */}
@@ -49,10 +48,8 @@ export function Dock() {
           })}
         </div>
 
-        {/* Connect button pill */}
-        <div className="flex items-center h-[42px] rounded-full bg-white px-2">
-          <ConnectWallet />
-        </div>
+        {/* Connect wallet */}
+        <ConnectWallet />
       </div>
     </nav>
   );

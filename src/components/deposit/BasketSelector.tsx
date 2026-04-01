@@ -8,66 +8,105 @@ interface BasketSelectorProps {
   onChange: (basket: string[]) => void;
 }
 
-const assetList = Object.values(BASKET_ASSETS);
+interface BasketOption {
+  id: string;
+  name: string;
+  description: string;
+  assets: readonly string[];
+  symbols: string[];
+  comingSoon?: boolean;
+}
+
+const BASKETS: BasketOption[] = [
+  {
+    id: 'flagship',
+    name: 'Flagship',
+    description: 'Nasdaq 100 + S&P 500',
+    assets: FLAGSHIP_BASKET,
+    symbols: ['NASDAQx', 'SPXx'],
+  },
+  {
+    id: 'dow-dax',
+    name: 'Atlantic',
+    description: 'Dow Jones 30 + DAX 40',
+    assets: [],
+    symbols: ['DOWx', 'DAXx'],
+    comingSoon: true,
+  },
+  {
+    id: 'ai-tech',
+    name: 'AI & Tech',
+    description: 'AI & Tech Leaders',
+    assets: [],
+    symbols: ['AIx'],
+    comingSoon: true,
+  },
+  {
+    id: 'crypto',
+    name: 'Crypto Blue Chips',
+    description: 'BTC + ETH',
+    assets: [],
+    symbols: ['CRYPTOx'],
+    comingSoon: true,
+  },
+];
+
+function arraysEqual(a: string[], b: readonly string[]) {
+  if (a.length !== b.length) return false;
+  return b.every((addr) => a.includes(addr));
+}
 
 export function BasketSelector({ selected, onChange }: BasketSelectorProps) {
-  const toggleToken = (address: string) => {
-    if (selected.includes(address)) {
-      onChange(selected.filter((a) => a !== address));
-    } else {
-      onChange([...selected, address]);
-    }
-  };
+  const selectedBasketId = BASKETS.find(
+    (b) => !b.comingSoon && arraysEqual(selected, b.assets),
+  )?.id;
 
-  const selectFlagship = () => {
-    onChange([...FLAGSHIP_BASKET]);
+  const selectBasket = (basket: BasketOption) => {
+    if (basket.comingSoon) return;
+    onChange([...basket.assets]);
   };
-
-  const isFlagshipSelected =
-    FLAGSHIP_BASKET.length === selected.length &&
-    FLAGSHIP_BASKET.every((addr) => selected.includes(addr));
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-muted-foreground">Select Basket Indices</h3>
-        <button
-          onClick={selectFlagship}
-          className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all border ${
-            isFlagshipSelected
-              ? 'bg-white/20 border-white/30 text-white'
-              : 'bg-white/5 border-white/10 text-muted-foreground hover:text-white hover:bg-white/10'
-          }`}
-        >
-          Flagship Basket
-        </button>
-      </div>
+      <h3 className="text-sm font-medium text-muted-foreground">Select Basket</h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {assetList.map((token) => {
-          const isSelected = selected.includes(token.address);
+        {BASKETS.map((basket) => {
+          const isSelected = selectedBasketId === basket.id;
           return (
             <button
-              key={token.address}
-              onClick={() => toggleToken(token.address)}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
-                isSelected
-                  ? 'bg-white/20 border-white/30'
-                  : 'bg-white/5 border-white/10 backdrop-blur-md hover:border-white/20'
+              key={basket.id}
+              onClick={() => selectBasket(basket)}
+              disabled={basket.comingSoon}
+              className={`relative flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left ${
+                basket.comingSoon
+                  ? 'opacity-40 cursor-not-allowed bg-white/[0.02] border-white/5'
+                  : isSelected
+                    ? 'bg-white/20 border-white/30'
+                    : 'bg-white/5 border-white/10 backdrop-blur-md hover:border-white/20'
               }`}
             >
-              <TokenIcon symbol={token.symbol} size="md" />
-              <div className="text-left">
-                <div className="text-sm font-medium text-white">{token.symbol}</div>
-                <div className="text-xs text-muted-foreground">{token.name}</div>
+              <div className="flex -space-x-2">
+                {basket.symbols.map((symbol) => (
+                  <TokenIcon key={symbol} symbol={symbol} size="md" className="ring-1 ring-black/50" />
+                ))}
               </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-medium text-white">{basket.name}</div>
+                <div className="text-xs text-muted-foreground">{basket.description}</div>
+              </div>
+              {basket.comingSoon && (
+                <span className="absolute top-2 right-2 text-[10px] font-medium text-muted-foreground bg-white/5 px-1.5 py-0.5 rounded">
+                  Soon
+                </span>
+              )}
             </button>
           );
         })}
       </div>
 
       {selected.length === 0 && (
-        <p className="text-xs text-loss">Select at least one index for the basket.</p>
+        <p className="text-xs text-loss">Select a basket to continue.</p>
       )}
     </div>
   );

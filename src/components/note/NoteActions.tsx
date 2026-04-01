@@ -44,7 +44,7 @@ function KISettleActions({ noteId }: { noteId: `0x${string}` }) {
     writeContract({
       address: CONTRACTS.AutocallEngine.address,
       abi: CONTRACTS.AutocallEngine.abi,
-      functionName: 'settleKI',
+      functionName: 'settleKi',
       args: [noteId, preferPhysical],
     });
   }
