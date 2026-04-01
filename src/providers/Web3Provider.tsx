@@ -1,9 +1,9 @@
 'use client';
 
-import { WagmiProvider, createConfig, http } from 'wagmi';
+import { PrivyProvider } from '@privy-io/react-auth';
+import { WagmiProvider, createConfig } from '@privy-io/wagmi';
+import { http } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
-import '@rainbow-me/rainbowkit/styles.css';
 import { inkSepolia } from '@/lib/chains';
 
 const config = createConfig({
@@ -11,26 +11,35 @@ const config = createConfig({
   transports: {
     [inkSepolia.id]: http(),
   },
-  ssr: true,
 });
 
 const queryClient = new QueryClient();
 
 export function Web3Provider({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiProvider config={config}>
+    <PrivyProvider
+      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
+      config={{
+        loginMethods: ['wallet', 'email', 'google'],
+        appearance: {
+          theme: 'dark',
+          accentColor: '#06b6d4',
+          walletList: ['metamask', 'rainbow', 'wallet_connect'],
+        },
+        defaultChain: inkSepolia,
+        supportedChains: [inkSepolia],
+        embeddedWallets: {
+          ethereum: {
+            createOnLogin: 'users-without-wallets',
+          },
+        },
+      }}
+    >
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider
-          theme={darkTheme({
-            accentColor: '#06b6d4',
-            accentColorForeground: 'white',
-            borderRadius: 'small',
-            fontStack: 'system',
-          })}
-        >
+        <WagmiProvider config={config}>
           {children}
-        </RainbowKitProvider>
+        </WagmiProvider>
       </QueryClientProvider>
-    </WagmiProvider>
+    </PrivyProvider>
   );
 }
