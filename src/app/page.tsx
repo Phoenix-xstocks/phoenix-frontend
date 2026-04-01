@@ -125,9 +125,9 @@ export default function Home() {
       <section className="h-screen snap-start snap-always relative flex flex-col">
         {/* Top bar: Docs left */}
         <div className="flex items-center justify-between px-8 pt-6 z-10">
-          <a href="#" className="text-sm uppercase tracking-widest text-white/70 hover:text-white transition-colors">
+          <Link href="/docs" className="text-sm uppercase tracking-widest text-white/70 hover:text-white transition-colors">
             Docs
-          </a>
+          </Link>
         </div>
 
         {/* Title centered at top */}

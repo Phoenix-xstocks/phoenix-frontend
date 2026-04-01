@@ -5,6 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber"
 import { EffectComposer } from "@react-three/postprocessing"
 import { useGLTF, useAnimations, Center } from "@react-three/drei"
 import { Vector2, Group, MathUtils, Box3, Vector3 } from "three"
+import { clone as cloneSkeletonUtils } from "three/examples/jsm/utils/SkeletonUtils.js"
 import { AsciiEffect } from "./ascii-effect"
 
 function PhoenixModel({
@@ -19,7 +20,11 @@ function PhoenixModel({
   centerMode?: boolean
 }) {
   const groupRef = useRef<Group>(null)
-  const { scene, animations } = useGLTF("/phoenix.glb")
+  const { scene: originalScene, animations } = useGLTF("/phoenix.glb")
+
+  // Clone the scene so each mount gets a fresh scene graph
+  // without stale disposed WebGL resources from the useGLTF cache
+  const scene = useMemo(() => cloneSkeletonUtils(originalScene), [originalScene])
   const { actions, mixer } = useAnimations(animations, scene)
 
   useEffect(() => {
