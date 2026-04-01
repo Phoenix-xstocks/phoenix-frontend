@@ -7,7 +7,9 @@ import { TransactionButton } from '@/components/ui/TransactionButton';
 import { formatBps } from '@/lib/format';
 import { NoteState, NOTE_STATE_CONFIG } from '@/lib/noteStates';
 import { CONTRACTS } from '@/lib/contracts';
+import { inkSepolia } from '@/lib/chains';
 import { PROTOCOL_CONSTANTS } from '@/lib/constants';
+import { useEnsureChain } from '@/hooks/useEnsureChain';
 import type { NoteDetail } from '@/hooks/useNoteDetail';
 
 interface NoteActionsProps {
@@ -34,18 +36,21 @@ function KISettleActions({ noteId }: { noteId: `0x${string}` }) {
   const [choice, setChoice] = useState<'cash' | 'physical' | null>(null);
 
   const { writeContract, data: txHash, isPending } = useWriteContract();
+  const { ensureChain } = useEnsureChain();
 
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
     hash: txHash,
   });
 
-  function settle(preferPhysical: boolean) {
+  async function settle(preferPhysical: boolean) {
     setChoice(preferPhysical ? 'physical' : 'cash');
+    await ensureChain();
     writeContract({
       address: CONTRACTS.AutocallEngine.address,
       abi: CONTRACTS.AutocallEngine.abi,
       functionName: 'settleKi',
       args: [noteId, preferPhysical],
+      chainId: inkSepolia.id,
     });
   }
 
