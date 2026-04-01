@@ -77,14 +77,17 @@ function PhoenixModel({
       mixer.update(0)
     }
 
-    // 5 waypoints = 5 snap sections (t=0, 0.25, 0.5, 0.75, 1.0)
-    // Each snap lands exactly on a waypoint
+    // 9 waypoints = 9 snap sections, alternating left-right
     const waypoints: [number, number][] = [
-      [-1.4, 0.0],    // section 1: left
-      [1.5, -0.5],    // section 2: right, low
-      [-1.3, 0.3],    // section 3: left, high
-      [1.4, -0.3],    // section 4: right
-      [-1.5, 0.1],    // section 5: left
+      [-1.4, 0.0],    // 1 Hero: left
+      [1.5, -0.3],    // 2 The Opportunity: right
+      [-1.3, 0.3],    // 3 What is an Autocall: left
+      [1.4, -0.5],    // 4 Worst-of Basket: right
+      [-1.5, 0.1],    // 5 Delta-Neutral: left
+      [1.3, -0.2],    // 6 Real-Time Coupon: right
+      [-1.4, 0.2],    // 7 Structured Scenario: left
+      [1.5, -0.4],    // 8 FAQ: right
+      [-1.5, 0.1],    // 9 Footer: left
     ]
 
     // Catmull-Rom spline for perfectly smooth curves through all waypoints
