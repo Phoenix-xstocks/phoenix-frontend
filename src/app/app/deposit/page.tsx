@@ -11,7 +11,6 @@ import { EstimatedCoupon } from '@/components/deposit/EstimatedCoupon';
 import { DepositStepper } from '@/components/deposit/DepositStepper';
 import { DepositStatusTracker } from '@/components/deposit/DepositStatusTracker';
 import { TransactionButton } from '@/components/ui/TransactionButton';
-import { HeroScene } from '@/components/hero-scene';
 import { useDepositFlow } from '@/hooks/useDepositFlow';
 import { useTokenBalance } from '@/hooks/useTokenBalance';
 import { useMaxDeposit } from '@/hooks/useMaxDeposit';
