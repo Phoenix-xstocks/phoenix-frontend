@@ -120,15 +120,15 @@ export function ProblemSection() {
         <div className="relative text-center mb-20">
           {/* Watermark */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none">
-            <span className="text-[8rem] lg:text-[12rem] font-light text-white/[0.03] leading-none">
+            <span className="text-[8rem] lg:text-[12rem] font-light text-white/[0.06] leading-none">
               $200B+
             </span>
           </div>
           {/* Actual number */}
-          <div className="relative">
+          <div className="relative pt-10">
             <p
               data-text-anim
-              className="text-sm uppercase tracking-[0.2em] text-gray-500 mb-6 opacity-0"
+              className="text-sm uppercase tracking-[0.2em] text-white/[0.5] mb-6 opacity-0"
             >
               The Opportunity
             </p>
@@ -140,7 +140,7 @@ export function ProblemSection() {
             </div>
             <p
               data-text-anim
-              className="mt-4 text-lg text-gray-500 opacity-0"
+              className="mt-12 text-lg text-white opacity-0"
             >
               in structured products issued annually. None of them exist onchain.
             </p>
@@ -151,7 +151,7 @@ export function ProblemSection() {
         <div className="grid gap-12 lg:grid-cols-2">
           {/* DeFi Today */}
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-4">DeFi Today</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-white/[0.5] mb-4">DeFi Today</p>
             <div className="space-y-3">
               {DEFI_TODAY.map((item) => (
                 <div
@@ -160,7 +160,7 @@ export function ProblemSection() {
                   className="border-l-2 border-l-red-500/30 bg-white/[0.03] rounded-r-xl px-6 py-4 opacity-0"
                 >
                   <span className="text-base font-medium text-white">{item.stat}</span>
-                  <p className="mt-1 text-sm text-gray-500">{item.desc}</p>
+                  <p className="mt-1 text-sm text-white/[0.5]">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -168,7 +168,7 @@ export function ProblemSection() {
 
           {/* Phoenix Introduces */}
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mb-4">Phoenix Introduces</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-white/[0.5] mb-4">Phoenix Introduces</p>
             <div className="space-y-3">
               {PHOENIX_INTRODUCES.map((item) => (
                 <div
@@ -177,7 +177,7 @@ export function ProblemSection() {
                   className="border-l-2 border-l-emerald-500/30 bg-white/[0.03] rounded-r-xl px-6 py-4 opacity-0"
                 >
                   <span className="text-base font-medium text-white">{item.stat}</span>
-                  <p className="mt-1 text-sm text-gray-500">{item.desc}</p>
+                  <p className="mt-1 text-sm text-white/[0.5]">{item.desc}</p>
                 </div>
               ))}
             </div>

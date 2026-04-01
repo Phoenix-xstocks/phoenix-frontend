@@ -78,7 +78,7 @@
 .faq-toggle:before, .faq-toggle:after {
   content: '';
   position: absolute;
-  background-color: rgba(255,255,255,0.15);
+  background-color: rgba(255,255,255,0.5);
   transition: transform 0.4s ease;
 }
 
@@ -116,7 +116,7 @@
 }
 
 .faq-question-text:hover {
-  color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5);
 }
 
 .faq-item.expanded .faq-question-text:hover {
@@ -161,7 +161,7 @@
 .phoenix-link-text {
   font-family: 'Noto Sans';
   font-weight: 600;
-  color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5);
 }
 
 .phoenix-link {
@@ -181,7 +181,7 @@
   height: 9px;
   margin-left: 10px;
   transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.5);
 }
 
 .faq-cta .arrow-icon:before {

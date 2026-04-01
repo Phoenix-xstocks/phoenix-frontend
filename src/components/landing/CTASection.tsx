@@ -123,7 +123,7 @@ export function CTASection() {
               <div className="text-3xl font-light text-white sm:text-4xl lg:text-5xl">
                 <AnimatedNumber item={item} inView={inView} />
               </div>
-              <div className="mt-3 text-sm text-gray-500">{item.label}</div>
+              <div className="mt-3 text-sm text-white/[0.5]">{item.label}</div>
             </div>
           ))}
         </div>
@@ -139,7 +139,7 @@ export function CTASection() {
             </h2>
             <p
               data-cta-anim
-              className="mx-auto mt-5 max-w-lg text-white/90 opacity-0"
+              className="mx-auto mt-5 max-w-lg text-white/[0.5] opacity-0"
             >
               Connect your wallet and deposit into live vaults.
               No minimums, no lock-ups beyond the vault term.

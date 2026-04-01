@@ -191,7 +191,7 @@ export default function Home() {
               <Image src="/phoenix.svg" alt="Phoenix" width={28} height={28} className="opacity-80" />
               <span className="text-xl font-bold text-white">Phoenix</span>
             </div>
-            <p className="text-sm text-white/40 leading-relaxed">
+            <p className="text-sm text-white/[0.5] leading-relaxed">
               Phoenix Protocol is a decentralized structured yield protocol built on Ethereum. It brings institutional-grade autocallable products onchain with trustless settlement via Chainlink CRE, offering two-sided perpetual vaults with coupon payoffs and barrier-based risk management.
             </p>
           </div>
@@ -201,27 +201,27 @@ export default function Home() {
             <div>
               <h4 className="text-base font-bold text-white mb-4">Resources</h4>
               <ul className="space-y-2.5">
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Product</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Scenarios</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">FAQ</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Product</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Scenarios</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">FAQ</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-base font-bold text-white mb-4">Ecosystem</h4>
               <ul className="space-y-2.5">
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Ink</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Chainlink</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Tydro</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Euler</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Nado</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Ink</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Chainlink</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Tydro</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Euler</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Nado</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-base font-bold text-white mb-4">Company</h4>
               <ul className="space-y-2.5">
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Privacy</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Terms</a></li>
-                <li><a href="#" className="text-sm text-white/40 hover:text-white/70 transition-colors">Contact</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Privacy</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Terms</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Contact</a></li>
               </ul>
             </div>
           </div>

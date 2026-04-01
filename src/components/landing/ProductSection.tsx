@@ -169,7 +169,7 @@ export function ProductSection() {
         <div className="max-w-2xl">
           <p
             data-product-text
-            className="text-sm uppercase tracking-[0.2em] text-gray-500 opacity-0"
+            className="text-sm uppercase tracking-[0.2em] text-white/[0.5] opacity-0"
           >
             The Product
           </p>
@@ -181,7 +181,7 @@ export function ProductSection() {
           </h2>
           <p
             data-product-text
-            className="mt-6 text-gray-400 leading-relaxed opacity-0"
+            className="mt-6 text-white/[0.5] leading-relaxed opacity-0"
           >
             Autocallables are structured financial products used by institutions
             worldwide. Phoenix brings them onchain — fully transparent,
@@ -199,7 +199,7 @@ export function ProductSection() {
               className="bg-white/[0.03] p-10 opacity-0 transition-colors hover:bg-white/[0.06]"
             >
               <h3 className="text-lg font-medium text-white">{pillar.title}</h3>
-              <p className="mt-3 text-sm text-gray-400 leading-relaxed">
+              <p className="mt-3 text-sm text-white/[0.5] leading-relaxed">
                 {pillar.description}
               </p>
             </div>
@@ -255,7 +255,7 @@ export function ProductSection() {
                 className="border-l-2 border-white/10 pl-3 sm:pl-5 opacity-0"
               >
                 <div className="text-2xl sm:text-5xl font-light text-white tracking-tight">{param.value}</div>
-                <div className="text-[10px] sm:text-sm uppercase tracking-wider text-gray-500 mt-1 sm:mt-2">{param.label}</div>
+                <div className="text-[10px] sm:text-sm uppercase tracking-wider text-white/[0.5] mt-1 sm:mt-2">{param.label}</div>
               </div>
             ))}
           </div>
@@ -269,9 +269,9 @@ export function ProductSection() {
             {STEPS.map((step, idx) => (
               <div key={step.number} className="relative">
                 <div data-step className="opacity-0">
-                  <div className="text-sm font-medium text-gray-500">{step.number}</div>
+                  <div className="text-sm font-medium text-white/[0.5]">{step.number}</div>
                   <h4 className="mt-3 text-lg font-medium text-white">{step.title}</h4>
-                  <p className="mt-2 text-sm text-gray-400 leading-relaxed">{step.description}</p>
+                  <p className="mt-2 text-sm text-white/[0.5] leading-relaxed">{step.description}</p>
                 </div>
                 {idx < STEPS.length - 1 && (
                   <div data-line className="absolute top-6 left-full hidden h-px w-8 origin-left bg-white/10 lg:block" style={{ transform: 'scaleX(0)' }} />
