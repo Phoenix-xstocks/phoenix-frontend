@@ -3,12 +3,9 @@ import localFont from 'next/font/local';
 import { Web3Provider } from '@/providers/Web3Provider';
 import './globals.css';
 
-const mainFont = localFont({
-  src: [
-    { path: '../../public/fonts/PressStart2P-Regular.ttf', weight: '400' },
-    { path: '../../public/fonts/PressStart2P-Regular.ttf', weight: '700' },
-  ],
-  variable: '--font-main',
+const fkGrotesk = localFont({
+  src: '../../public/fonts/FKGrotesk.woff2',
+  variable: '--font-fk-grotesk',
   display: 'swap',
 });
 
@@ -23,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${mainFont.variable}`}>
+    <html lang="en" className={`dark ${fkGrotesk.variable}`}>
       <body className="min-h-screen antialiased">
         <Web3Provider>
           {children}

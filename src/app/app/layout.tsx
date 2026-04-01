@@ -15,6 +15,9 @@ export default function AppLayout({
       <div className="fixed inset-0 -z-10">
         <HeroScene scrollProgress={0.5} />
       </div>
+      <div className="fixed left-0 top-1/2 -translate-y-1/2 w-[280px] h-[400px] z-10 hidden xl:block pointer-events-none opacity-70">
+        <HeroScene scrollProgress={0} centerMode className="w-full h-full" />
+      </div>
       <Dock />
       <div className="relative">
         {children}

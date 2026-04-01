@@ -10,23 +10,23 @@ interface WaterfallChartProps {
 }
 
 const SEGMENTS = [
-  { key: 'p1Paid', label: 'P1 Base Coupons', color: '#06b6d4' },
-  { key: 'p2Paid', label: 'P2 Principal', color: '#3b82f6' },
-  { key: 'p3Paid', label: 'P3 Carry', color: '#22c55e' },
-  { key: 'p4Paid', label: 'P4 Hedge', color: '#eab308' },
-  { key: 'p5Paid', label: 'P5 Reserve', color: '#a855f7' },
+  { key: 'p1Paid', label: 'P1 Coupons', color: '#206040' },
+  { key: 'p2Paid', label: 'P2 Principal', color: '#404060' },
+  { key: 'p3Paid', label: 'P3 Carry', color: '#40a040' },
+  { key: 'p4Paid', label: 'P4 Hedge', color: '#e0c040' },
+  { key: 'p5Paid', label: 'P5 Reserve', color: '#504070' },
   { key: 'p6Paid', label: 'P6 Treasury', color: '#6b7280' },
 ] as const;
 
 export function WaterfallChart({ result, isLoading }: WaterfallChartProps) {
   if (isLoading || !result) {
     return (
-      <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6">
-        <Skeleton className="h-5 w-48 mb-4" />
-        <Skeleton className="h-10 w-full mb-4" />
-        <div className="flex gap-4">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+        <Skeleton className="h-4 w-40 mb-5" />
+        <Skeleton className="h-8 w-full mb-4" />
+        <div className="grid grid-cols-3 gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-4 w-20" />
+            <Skeleton key={i} className="h-3 w-20" />
           ))}
         </div>
       </div>
@@ -41,16 +41,18 @@ export function WaterfallChart({ result, isLoading }: WaterfallChartProps) {
   const total = values.reduce((sum, v) => sum + v.value, 0n);
 
   return (
-    <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-sm text-muted-foreground">Waterfall Distribution (Last Epoch)</h3>
-        <span className="font-mono tabular-nums text-sm text-white">
-          Total: ${formatUSDC(total)}
+    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-xs text-white/30 uppercase tracking-wide">
+          Waterfall (Last Epoch)
+        </span>
+        <span className="font-mono tabular-nums text-sm text-white/60">
+          ${formatUSDC(total)}
         </span>
       </div>
 
       {/* Stacked bar */}
-      <div className="flex h-10 rounded-lg overflow-hidden mb-4">
+      <div className="flex h-8 rounded-lg overflow-hidden mb-5 bg-white/[0.02]">
         {values.map((seg) => {
           const width = total > 0n
             ? (Number(seg.value) / Number(total)) * 100
@@ -59,10 +61,11 @@ export function WaterfallChart({ result, isLoading }: WaterfallChartProps) {
           return (
             <div
               key={seg.key}
-              className="h-full transition-all duration-300"
+              className="h-full transition-all duration-500"
               style={{
                 width: `${width}%`,
                 backgroundColor: seg.color,
+                opacity: 0.85,
                 minWidth: width > 0 ? '2px' : 0,
               }}
               title={`${seg.label}: $${formatUSDC(seg.value)}`}
@@ -72,22 +75,20 @@ export function WaterfallChart({ result, isLoading }: WaterfallChartProps) {
       </div>
 
       {/* Legend */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-3">
         {values.map((seg) => {
-          const isP6Blocked = seg.key === 'p6Paid' && !result.p1FullyPaid;
+          const isBlocked = seg.key === 'p6Paid' && !result.p1FullyPaid;
           return (
-            <div key={seg.key} className={`flex items-start gap-2${isP6Blocked ? ' opacity-40' : ''}`}>
+            <div key={seg.key} className={`flex items-center gap-2 ${isBlocked ? 'opacity-30' : ''}`}>
               <div
-                className="w-3 h-3 rounded-sm mt-0.5 shrink-0"
+                className="w-2 h-2 rounded-full shrink-0"
                 style={{ backgroundColor: seg.color }}
               />
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground truncate">
-                  {seg.label}{isP6Blocked ? ' (blocked)' : ''}
-                </p>
-                <p className="text-xs font-mono tabular-nums text-white">
+                <span className="text-xs text-white/30 block truncate">{seg.label}</span>
+                <span className="text-xs font-mono tabular-nums text-white/70">
                   ${formatUSDC(seg.value)}
-                </p>
+                </span>
               </div>
             </div>
           );

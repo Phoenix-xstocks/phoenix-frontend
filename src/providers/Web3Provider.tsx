@@ -23,7 +23,7 @@ export function Web3Provider({ children }: { children: React.ReactNode }) {
         loginMethods: ['wallet', 'email', 'google'],
         appearance: {
           theme: 'dark',
-          accentColor: '#06b6d4',
+          accentColor: '#206040',
           walletList: ['metamask', 'rainbow', 'wallet_connect'],
         },
         defaultChain: inkSepolia,
