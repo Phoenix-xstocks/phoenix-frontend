@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { GeistPixelTriangle } from 'geist/font/pixel';
 import { Web3Provider } from '@/providers/Web3Provider';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -16,7 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className={`dark ${GeistPixelTriangle.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
         <Web3Provider>
           <Navbar />
