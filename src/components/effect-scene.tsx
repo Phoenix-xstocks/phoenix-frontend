@@ -79,7 +79,7 @@ function PhoenixModel({
 
     // 9 waypoints = 9 snap sections, alternating left-right
     const waypoints: [number, number][] = [
-      [-1.4, 0.0],    // 1 Hero: left
+      [0.0, -0.15],   // 1 Hero: center
       [1.5, -0.3],    // 2 The Opportunity: right
       [-1.3, 0.3],    // 3 What is an Autocall: left
       [1.4, -0.5],    // 4 Worst-of Basket: right
@@ -124,11 +124,25 @@ function PhoenixModel({
     groupRef.current.position.x = posX
     groupRef.current.position.y = posY + idleBob
 
+    // Blend between hero pose (face camera) and normal pose (side profile)
+    // heroBlend = 1 at t=0 (hero), fades to 0 by t~0.1 (second section)
+    const heroBlend = Math.max(0, 1 - clampedT * 10)
+
     // Bank into the direction of movement for a natural flight feel
     const bankZ = -Math.cos(t * Math.PI * 2) * 0.15 * Math.min(scrollSpeed.current * 3, 1)
-    const rotY = Math.PI / 2
+
+    // Hero: rotY=0 (face us), Normal: rotY=PI/2 (side profile)
+    const normalRotY = Math.PI / 2
+    const heroRotY = 0
+    const rotY = MathUtils.lerp(normalRotY, heroRotY, heroBlend)
+
+    // Hero: slightly tilted back, Normal: slight forward tilt
+    const normalRotX = -0.1
+    const heroRotX = -0.3
+    const rotX = MathUtils.lerp(normalRotX, heroRotX, heroBlend)
+
     groupRef.current.rotation.y = rotY + smoothMouse.current.x * 0.1
-    groupRef.current.rotation.x = -0.1 - smoothMouse.current.y * 0.05
+    groupRef.current.rotation.x = rotX - smoothMouse.current.y * 0.05
     groupRef.current.rotation.z = bankZ
   })
 

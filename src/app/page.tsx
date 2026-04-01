@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { HeroScene } from "@/components/hero-scene"
-import { CouponCounter } from "@/components/landing/CouponCounter"
 
 function useInView(ref: React.RefObject<HTMLElement | null>, threshold = 0.3) {
   const [visible, setVisible] = useState(false)
@@ -105,56 +104,48 @@ export default function Home() {
       </div>
 
       {/* Hero */}
-      <Section className="pt-16">
-        {() => (
-          <div className="max-w-4xl text-center space-y-8">
-            <FadeSlide show={true} direction="up">
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-center drop-shadow-lg text-white">
-                Phoenix Protocol
-              </h1>
-            </FadeSlide>
-            <FadeSlide show={true} direction="up" delay={200}>
-              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed drop-shadow-md">
-                Permissionless autocall structured products on Ink.
-                Earn 8.5-13% APY on a worst-of basket of tokenized indices
-                with delta-neutral hedging and real-time coupon streaming.
-              </p>
-            </FadeSlide>
-            <FadeSlide show={true} direction="up" delay={400}>
-              <div className="flex gap-4 justify-center pt-4">
-                <Link
-                  href="/app/deposit"
-                  className="px-6 py-2.5 rounded-lg font-medium text-xs bg-white text-black hover:bg-white/90 transition-all"
-                >
-                  Deposit USDC
-                </Link>
-                <Link
-                  href="/app/dashboard"
-                  className="px-6 py-2.5 rounded-lg font-medium text-xs border border-white/20 hover:bg-white/10 backdrop-blur-sm transition-all"
-                >
-                  Dashboard
-                </Link>
-              </div>
-            </FadeSlide>
-            <FadeSlide show={true} direction="up" delay={600}>
-              <div className="grid grid-cols-3 gap-8 w-full">
-                <div className="backdrop-blur-sm rounded-lg p-6 text-center">
-                  <p className="text-lg font-bold">8.5-13%</p>
-                  <p className="text-muted-foreground mt-2 text-[10px]">Target APY</p>
-                </div>
-                <div className="backdrop-blur-sm rounded-lg p-6 text-center">
-                  <p className="text-lg font-bold">6 months</p>
-                  <p className="text-muted-foreground mt-2 text-[10px]">Maturity</p>
-                </div>
-                <div className="backdrop-blur-sm rounded-lg p-6 text-center">
-                  <p className="text-lg font-bold">2 indices</p>
-                  <p className="text-muted-foreground mt-2 text-[10px]">Nasdaq + S&P 500</p>
-                </div>
-              </div>
-            </FadeSlide>
-          </div>
-        )}
-      </Section>
+      <section className="h-screen snap-start snap-always relative flex flex-col">
+        {/* Top bar: Docs left, Launch App right */}
+        <div className="flex items-center justify-between px-8 pt-6 z-10">
+          <a href="#" className="text-[8px] uppercase tracking-widest text-white/70 hover:text-white transition-colors">
+            Docs
+          </a>
+          <Link
+            href="/app/deposit"
+            className="px-5 py-2 rounded-lg font-medium text-[8px] bg-white text-black hover:bg-white/90 transition-all"
+          >
+            Launch App
+          </Link>
+        </div>
+
+        {/* Title centered at top */}
+        <div className="flex-1 flex flex-col items-center justify-start pt-10 md:pt-14 z-10">
+          <FadeSlide show={true} direction="up" delay={0}>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-center drop-shadow-lg text-white">
+              Phoenix
+            </h1>
+          </FadeSlide>
+          <FadeSlide show={true} direction="up" delay={100}>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-center drop-shadow-lg text-white -mt-1">
+              Protocol
+            </h1>
+          </FadeSlide>
+        </div>
+
+        {/* Subtitle at bottom */}
+        <div className="pb-12 text-center z-10">
+          <FadeSlide show={true} direction="up" delay={300}>
+            <p className="text-[9px] md:text-xs text-muted-foreground drop-shadow-md">
+              Permissionless Autocall Structured Products on Ink
+            </p>
+          </FadeSlide>
+          <FadeSlide show={true} direction="up" delay={400}>
+            <p className="text-[7px] text-white/30 mt-3 uppercase tracking-[0.3em]">
+              Scroll
+            </p>
+          </FadeSlide>
+        </div>
+      </section>
 
       {/* The Opportunity */}
       <Section>
@@ -275,9 +266,6 @@ export default function Home() {
                 accrued coupons at any time. This is DeFi-native structured finance:
                 transparent, composable, and always accessible.
               </p>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={450}>
-              <CouponCounter visible={visible} />
             </FadeSlide>
           </div>
         )}
