@@ -15,7 +15,7 @@ export function StatsGrid({ stats, isLoading }: StatsGridProps) {
     return (
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-surface rounded-xl border border-border p-5">
+          <div key={i} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-5">
             <Skeleton className="h-4 w-24 mb-2" />
             <Skeleton className="h-8 w-32" />
           </div>

@@ -21,10 +21,10 @@ export function TransactionButton({
   variant = 'primary',
   className = '',
 }: TransactionButtonProps) {
-  const baseClasses = 'px-6 py-3 rounded-lg font-medium transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseClasses = 'px-6 py-3 rounded-lg font-medium transition-all text-sm disabled:bg-white/20 disabled:text-white/40 disabled:cursor-not-allowed';
   const variantClasses = variant === 'primary'
-    ? 'bg-accent hover:bg-accent-dim text-white'
-    : 'bg-surface-2 hover:bg-border text-white border border-border';
+    ? 'bg-white text-black hover:bg-white/90'
+    : 'border border-white/20 hover:bg-white/10 backdrop-blur-sm text-white';
 
   const stateLabel = isLoading ? 'Confirming...' : isSuccess ? 'Success' : isError ? 'Failed' : label;
 

@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import { Web3Provider } from '@/providers/Web3Provider';
-import { Dock } from '@/components/layout/Dock';
-import { Toaster } from 'sonner';
 import './globals.css';
 
 const mainFont = localFont({
@@ -28,19 +26,7 @@ export default function RootLayout({
     <html lang="en" className={`dark ${mainFont.variable}`}>
       <body className="min-h-screen antialiased">
         <Web3Provider>
-          <Dock />
           {children}
-          <Toaster
-            theme="dark"
-            position="bottom-right"
-            toastOptions={{
-              style: {
-                background: '#111827',
-                border: '1px solid #374151',
-                color: '#e5e7eb',
-              },
-            }}
-          />
         </Web3Provider>
       </body>
     </html>

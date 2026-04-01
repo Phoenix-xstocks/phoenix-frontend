@@ -7,9 +7,9 @@ import { ConnectWallet } from '@/components/connect-wallet';
 
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
-  { href: '/deposit', label: 'Deposit' },
-  { href: '/notes', label: 'My Notes' },
-  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/app/deposit', label: 'Deposit' },
+  { href: '/app/notes', label: 'My Notes' },
+  { href: '/app/dashboard', label: 'Dashboard' },
 ];
 
 export function Dock() {

@@ -14,7 +14,7 @@ interface EpochCountdownProps {
 export function EpochCountdown({ currentEpoch, epochEndTimestamp, isEpochReady, isLoading }: EpochCountdownProps) {
   if (isLoading) {
     return (
-      <div className="bg-surface rounded-xl border border-border p-6">
+      <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6">
         <Skeleton className="h-6 w-24 mb-4" />
         <Skeleton className="h-8 w-40 mb-3" />
         <Skeleton className="h-5 w-16" />
@@ -23,7 +23,7 @@ export function EpochCountdown({ currentEpoch, epochEndTimestamp, isEpochReady, 
   }
 
   return (
-    <div className="bg-surface rounded-xl border border-border p-6">
+    <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-semibold text-white">
           Epoch #{currentEpoch}

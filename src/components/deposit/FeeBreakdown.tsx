@@ -14,12 +14,12 @@ export function FeeBreakdown({ amount }: FeeBreakdownProps) {
   if (amount <= 0n) return null;
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-4 space-y-3">
-      <h3 className="text-sm font-medium text-muted">Fee Breakdown</h3>
+    <div className="rounded-xl border border-white/10 bg-white/5 backdrop-blur-md p-4 space-y-3">
+      <h3 className="text-sm font-medium text-muted-foreground">Fee Breakdown</h3>
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted">
+          <span className="text-sm text-muted-foreground">
             Embedded Fee ({formatBps(PROTOCOL_CONSTANTS.EMBEDDED_FEE_BPS)})
           </span>
           <span className="text-sm font-mono tabular-nums text-white">
@@ -28,7 +28,7 @@ export function FeeBreakdown({ amount }: FeeBreakdownProps) {
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted">
+          <span className="text-sm text-muted-foreground">
             Origination Fee ({formatBps(PROTOCOL_CONSTANTS.ORIGINATION_FEE_BPS)})
           </span>
           <span className="text-sm font-mono tabular-nums text-white">
@@ -37,14 +37,14 @@ export function FeeBreakdown({ amount }: FeeBreakdownProps) {
         </div>
 
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted">Total Fees</span>
+          <span className="text-sm text-muted-foreground">Total Fees</span>
           <span className="text-sm font-mono tabular-nums text-white">
             -{formatUSDC(totalFees)} USDC
           </span>
         </div>
       </div>
 
-      <div className="border-t border-border pt-3">
+      <div className="border-t border-white/10 pt-3">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-white">Net Amount</span>
           <span className="text-base font-mono tabular-nums font-medium text-gain">

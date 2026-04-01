@@ -17,6 +17,30 @@ export const XSTOCKS = {
     name: 'Meta',
     color: '#0668E1',
   },
+  AAPLx: {
+    address: '0x0000000000000000000000000000000000000001' as const,
+    symbol: 'AAPLx',
+    name: 'Apple',
+    color: '#A2AAAD',
+  },
+  MSFTx: {
+    address: '0x0000000000000000000000000000000000000002' as const,
+    symbol: 'MSFTx',
+    name: 'Microsoft',
+    color: '#00A4EF',
+  },
+  AMZNx: {
+    address: '0x0000000000000000000000000000000000000003' as const,
+    symbol: 'AMZNx',
+    name: 'Amazon',
+    color: '#FF9900',
+  },
+  GOOGLx: {
+    address: '0x0000000000000000000000000000000000000004' as const,
+    symbol: 'GOOGLx',
+    name: 'Google',
+    color: '#4285F4',
+  },
 } as const;
 
 export const FLAGSHIP_BASKET = [
@@ -38,7 +62,7 @@ export const PROTOCOL_CONSTANTS = {
   COUPON_BARRIER_BPS: 7_000, // 70%
   AUTOCALL_TRIGGER_BPS: 10_000, // 100%
   STEP_DOWN_BPS: 200, // 2%
-  KI_BARRIER_BPS: 5_000, // 50%
+  KI_BARRIER_BPS: 7_000, // 70%
   KI_SETTLE_DEADLINE_DAYS: 7,
   CLAIM_DEADLINE_HOURS: 24,
   EPOCH_DURATION_HOURS: 48,

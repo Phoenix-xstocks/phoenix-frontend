@@ -24,13 +24,13 @@ export function Hero() {
 
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/deposit"
+            href="/app/deposit"
             className="px-8 py-3.5 bg-accent hover:bg-accent-dim text-white rounded-lg font-medium transition-colors text-base"
           >
             Start Earning
           </Link>
           <Link
-            href="/dashboard"
+            href="/app/dashboard"
             className="px-8 py-3.5 bg-surface-2 hover:bg-border text-white rounded-lg font-medium transition-colors border border-border text-base"
           >
             View Dashboard

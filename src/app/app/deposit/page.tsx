@@ -1,7 +1,8 @@
 'use client';
 
-import { useAccount } from 'wagmi';
-import { parseUnits } from 'viem';
+import { useCallback } from 'react';
+import { useAccount, useWriteContract } from 'wagmi';
+import { toast } from 'sonner';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { BasketSelector } from '@/components/deposit/BasketSelector';
 import { AmountInput } from '@/components/deposit/AmountInput';
@@ -13,6 +14,7 @@ import { TransactionButton } from '@/components/ui/TransactionButton';
 import { useDepositFlow } from '@/hooks/useDepositFlow';
 import { useTokenBalance } from '@/hooks/useTokenBalance';
 import { CONTRACTS } from '@/lib/contracts';
+import { inkSepolia } from '@/lib/chains';
 import { PROTOCOL_CONSTANTS } from '@/lib/constants';
 
 export default function DepositPage() {
@@ -26,6 +28,7 @@ export default function DepositPage() {
     isApproving,
     isRequesting,
     isClaiming,
+    depositRequest,
     setAmount,
     setBasket,
     startDeposit,
@@ -33,11 +36,36 @@ export default function DepositPage() {
     reset,
   } = useDepositFlow();
 
+  // Refund handler using the on-chain refundDeposit function
+  const { writeContract: writeRefund, isPending: isRefunding } = useWriteContract();
+  const handleRefund = useCallback(() => {
+    if (state.requestId === undefined) return;
+    writeRefund(
+      {
+        address: CONTRACTS.XYieldVault.address,
+        abi: CONTRACTS.XYieldVault.abi,
+        functionName: 'refundDeposit',
+        args: [state.requestId],
+        chainId: inkSepolia.id,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Deposit refunded successfully');
+          reset();
+        },
+        onError: (error) => {
+          toast.error(error instanceof Error ? error.message : 'Refund failed');
+        },
+      },
+    );
+  }, [state.requestId, writeRefund, reset]);
+
   const isValidAmount =
     amountBigInt >= PROTOCOL_CONSTANTS.MIN_NOTE_SIZE &&
     amountBigInt <= PROTOCOL_CONSTANTS.MAX_NOTE_SIZE;
   const isValidBasket = state.basket.length > 0;
-  const canDeposit = isConnected && isValidAmount && isValidBasket;
+  const hasSufficientBalance = usdcBalance !== undefined && amountBigInt <= usdcBalance;
+  const canDeposit = isConnected && isValidAmount && isValidBasket && hasSufficientBalance;
 
   // Compute net amount after fees
   const totalFeeBps = PROTOCOL_CONSTANTS.EMBEDDED_FEE_BPS + PROTOCOL_CONSTANTS.ORIGINATION_FEE_BPS;
@@ -85,7 +113,7 @@ export default function DepositPage() {
           )}
 
           {!isConnected ? (
-            <div className="bg-surface rounded-xl border border-border p-6 text-center text-muted">
+            <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 text-center text-muted-foreground">
               Connect your wallet to deposit
             </div>
           ) : (
@@ -109,13 +137,13 @@ export default function DepositPage() {
         <DepositStepper currentStep={currentStep} completedSteps={completedSteps} />
 
         {(state.step === 'approving' || state.step === 'requesting') && (
-          <div className="bg-surface rounded-xl border border-border p-8 text-center">
-            <div className="animate-pulse text-accent text-lg mb-2">
+          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 text-center">
+            <div className="animate-pulse text-white text-lg mb-2">
               {state.step === 'approving' ? 'Approving USDC...' : 'Submitting deposit request...'}
             </div>
-            <p className="text-sm text-muted">Please confirm the transaction in your wallet</p>
+            <p className="text-sm text-muted-foreground">Please confirm the transaction in your wallet</p>
             {state.txHash && (
-              <p className="text-xs text-muted mt-2 font-mono">
+              <p className="text-xs text-muted-foreground mt-2 font-mono">
                 Tx: {state.txHash.slice(0, 10)}...{state.txHash.slice(-8)}
               </p>
             )}
@@ -127,38 +155,40 @@ export default function DepositPage() {
             requestId={state.requestId ?? 0n}
             amount={amountBigInt}
             basket={state.basket}
-            requestedAt={Math.floor(Date.now() / 1000)}
+            requestedAt={depositRequest?.requestedAt !== undefined
+              ? Number(depositRequest.requestedAt)
+              : 0 /* fallback until on-chain data loads */}
             status={state.step as 'pending' | 'ready' | 'expired'}
             onClaim={claimDeposit}
-            onRefund={() => {/* TODO: implement refund */}}
+            onRefund={handleRefund}
           />
         )}
 
         {state.step === 'claiming' && (
-          <div className="bg-surface rounded-xl border border-border p-8 text-center">
-            <div className="animate-pulse text-accent text-lg mb-2">
+          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 text-center">
+            <div className="animate-pulse text-white text-lg mb-2">
               Claiming your NoteToken...
             </div>
-            <p className="text-sm text-muted">Please confirm the transaction in your wallet</p>
+            <p className="text-sm text-muted-foreground">Please confirm the transaction in your wallet</p>
           </div>
         )}
 
         {state.step === 'done' && (
-          <div className="bg-surface rounded-xl border border-accent/30 p-8 text-center">
+          <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-8 text-center">
             <div className="text-gain text-2xl font-bold mb-2">Deposit Complete</div>
-            <p className="text-muted mb-4">
+            <p className="text-muted-foreground mb-4">
               Your NoteToken has been minted. You can view it in My Notes.
             </p>
             <div className="flex gap-4 justify-center">
               <a
-                href="/notes"
-                className="px-6 py-3 bg-accent hover:bg-accent-dim text-white rounded-lg font-medium transition-colors"
+                href="/app/notes"
+                className="px-6 py-3 bg-white text-black hover:bg-white/90 rounded-lg font-medium transition-colors"
               >
                 View My Notes
               </a>
               <button
                 onClick={reset}
-                className="px-6 py-3 bg-surface-2 hover:bg-border text-white rounded-lg font-medium transition-colors border border-border"
+                className="px-6 py-3 hover:bg-white/10 text-white rounded-lg font-medium transition-colors border border-white/20 backdrop-blur-sm"
               >
                 New Deposit
               </button>

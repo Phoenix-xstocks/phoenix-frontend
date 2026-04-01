@@ -30,13 +30,13 @@ export function BasketSelector({ selected, onChange }: BasketSelectorProps) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-muted">Select Basket Tokens</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">Select Basket Tokens</h3>
         <button
           onClick={selectFlagship}
           className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all border ${
             isFlagshipSelected
-              ? 'bg-accent/10 border-accent text-accent'
-              : 'bg-surface-2 border-border text-muted hover:text-white hover:border-white/20'
+              ? 'bg-white/20 border-white/30 text-white'
+              : 'bg-white/5 border-white/10 text-muted-foreground hover:text-white hover:bg-white/10'
           }`}
         >
           Flagship Basket
@@ -52,14 +52,14 @@ export function BasketSelector({ selected, onChange }: BasketSelectorProps) {
               onClick={() => toggleToken(token.address)}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${
                 isSelected
-                  ? 'bg-accent/5 border-accent shadow-[0_0_0_1px] shadow-accent/20'
-                  : 'bg-surface border-border hover:border-white/20'
+                  ? 'bg-white/20 border-white/30'
+                  : 'bg-white/5 border-white/10 backdrop-blur-md hover:border-white/20'
               }`}
             >
               <TokenIcon symbol={token.symbol} size="md" />
               <div className="text-left">
                 <div className="text-sm font-medium text-white">{token.symbol}</div>
-                <div className="text-xs text-muted">{token.name}</div>
+                <div className="text-xs text-muted-foreground">{token.name}</div>
               </div>
             </button>
           );

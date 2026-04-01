@@ -14,7 +14,7 @@ interface TVLCardProps {
 export function TVLCard({ tvl, vaultBalance, engineBalance, isLoading }: TVLCardProps) {
   if (isLoading) {
     return (
-      <div className="bg-surface rounded-xl border border-border border-l-4 border-l-gain p-6">
+      <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 border-l-4 border-l-gain p-6">
         <Skeleton className="h-4 w-32 mb-3" />
         <Skeleton className="h-10 w-48 mb-4" />
         <div className="flex gap-6">
@@ -26,8 +26,8 @@ export function TVLCard({ tvl, vaultBalance, engineBalance, isLoading }: TVLCard
   }
 
   return (
-    <div className="bg-surface rounded-xl border border-border border-l-4 border-l-gain p-6">
-      <p className="text-sm text-muted mb-2">Total Value Locked</p>
+    <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 border-l-4 border-l-gain p-6">
+      <p className="text-sm text-muted-foreground mb-2">Total Value Locked</p>
       <MonoNumber
         value={formatUSDC(tvl)}
         prefix="$"
@@ -36,13 +36,13 @@ export function TVLCard({ tvl, vaultBalance, engineBalance, isLoading }: TVLCard
       />
       <div className="flex gap-6 mt-4 text-sm">
         <div>
-          <span className="text-muted">Vault: </span>
+          <span className="text-muted-foreground">Vault: </span>
           <span className="font-mono tabular-nums text-white">
             ${formatUSDC(vaultBalance)}
           </span>
         </div>
         <div>
-          <span className="text-muted">Engine: </span>
+          <span className="text-muted-foreground">Engine: </span>
           <span className="font-mono tabular-nums text-white">
             ${formatUSDC(engineBalance)}
           </span>
