@@ -29,7 +29,7 @@ export default function NoteDetailPage({ params }: { params: { id: string } }) {
               Expected a 32-byte hex string (0x...)
             </p>
             <Link
-              href="/app/notes"
+              href="/app/dashboard"
               className="px-6 py-3 bg-white text-black hover:bg-white/90 rounded-lg font-medium transition-colors inline-block"
             >
               Back to Notes
@@ -69,7 +69,7 @@ export default function NoteDetailPage({ params }: { params: { id: string } }) {
               The note {shortenAddress(noteId, 8)} could not be found on-chain.
             </p>
             <Link
-              href="/app/notes"
+              href="/app/dashboard"
               className="px-6 py-3 bg-white text-black hover:bg-white/90 rounded-lg font-medium transition-colors inline-block"
             >
               Back to Notes
