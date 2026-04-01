@@ -103,17 +103,6 @@ export default function Home() {
         <HeroScene scrollProgress={scrollProgress} />
       </div>
 
-      {/* Launch App button – top-right, fades out on scroll */}
-      <Link
-        href="/app/deposit"
-        className={`fixed top-6 right-6 z-50 flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium text-white border border-white/20 backdrop-blur-sm hover:bg-white/10 transition-all duration-500 ${
-          scrollProgress > 0 ? "opacity-0 -translate-y-4 pointer-events-none" : "opacity-100 translate-y-0"
-        }`}
-      >
-        Launch App
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-      </Link>
-
       {/* Hero */}
       <section className="h-screen snap-start snap-always relative flex flex-col">
         {/* Top bar: Docs left, Launch App right */}

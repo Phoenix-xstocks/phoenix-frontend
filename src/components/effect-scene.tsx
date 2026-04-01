@@ -79,7 +79,7 @@ function PhoenixModel({
       mixer.update(0)
     }
 
-    const scaleMultiplier = centerMode ? 0.35 : 0.25
+    const scaleMultiplier = centerMode ? 0.25 : 0.25
 
     // 9 waypoints = 9 snap sections, alternating left-right
     const waypoints: [number, number][] = [
@@ -97,7 +97,7 @@ function PhoenixModel({
     if (centerMode) {
       // Center mode: phoenix stays centered, gently gliding
       const idleBob = Math.sin(elapsed * 0.8) * 0.06
-      const idleSway = Math.sin(elapsed * 0.3) * 0.15
+      const idleSway = Math.sin(elapsed * 0.3) * 0.05
 
       groupRef.current.scale.setScalar(scaleMultiplier)
       groupRef.current.position.x = idleSway
@@ -225,7 +225,7 @@ export function EffectScene({ className, scrollProgress = 0, centerMode = false 
     <div
       ref={containerRef}
       className={className}
-      style={{ width: "100%", height: "100vh" }}
+      style={{ width: "100%", height: centerMode ? "100%" : "100vh" }}
     >
       <Canvas
         camera={{ position: [0, 0, 2.5], fov: 50 }}

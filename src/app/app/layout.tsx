@@ -15,14 +15,16 @@ export default function AppLayout({
       <div className="fixed inset-0 -z-10">
         <HeroScene scrollProgress={0.5} />
       </div>
-      <div className="fixed left-0 top-1/2 -translate-y-1/2 w-[280px] h-[400px] z-10 hidden xl:block pointer-events-none opacity-70">
+      <div className="fixed -left-[400px] top-1/2 -translate-y-1/2 w-[700px] h-[700px] pointer-events-none" style={{ zIndex: 40 }}>
         <HeroScene scrollProgress={0} centerMode className="w-full h-full" />
       </div>
       <Dock />
-      <div className="relative">
+      <div className="relative z-0">
         {children}
       </div>
-      <Footer />
+      <div className="relative z-0">
+        <Footer />
+      </div>
       <Toaster
         theme="dark"
         position="bottom-right"

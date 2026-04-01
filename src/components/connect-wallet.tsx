@@ -11,7 +11,7 @@ export function ConnectWallet() {
     return (
       <button
         disabled
-        className="px-4 py-2 rounded-lg text-sm font-medium bg-surface-2 text-muted border border-border opacity-50 cursor-not-allowed"
+        className="px-4 py-2 rounded-full text-sm font-medium bg-black text-white/50 opacity-50 cursor-not-allowed"
       >
         Loading...
       </button>
@@ -22,7 +22,7 @@ export function ConnectWallet() {
     return (
       <button
         onClick={logout}
-        className="px-4 py-2 rounded-lg text-sm font-medium bg-surface-2 text-white border border-border hover:bg-border transition-colors"
+        className="px-4 py-2 rounded-full text-sm font-medium bg-black text-white hover:bg-black/80 transition-colors"
       >
         {shortenAddress(wallets[0].address)}
       </button>
@@ -32,7 +32,7 @@ export function ConnectWallet() {
   return (
     <button
       onClick={login}
-      className="px-4 py-2 rounded-lg text-sm font-medium bg-accent hover:bg-accent-dim text-white transition-colors"
+      className="px-4 py-2 rounded-full text-sm font-medium bg-black text-white hover:bg-black/80 transition-colors"
     >
       Connect Wallet
     </button>

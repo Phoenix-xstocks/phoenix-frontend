@@ -7,9 +7,8 @@ import { useScrollPastThreshold } from '@/hooks/useScrollPastThreshold';
 
 const NAV_LINKS = [
   { href: '/', label: 'Home' },
-  { href: '/deposit', label: 'Deposit' },
-  { href: '/notes', label: 'My Notes' },
-  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/app/deposit', label: 'Deposit' },
+  { href: '/app/dashboard', label: 'Dashboard' },
   { href: '/docs', label: 'Docs' },
 ];
 
