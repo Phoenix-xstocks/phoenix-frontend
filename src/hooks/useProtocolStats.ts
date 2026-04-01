@@ -4,8 +4,6 @@ import { useReadContract } from 'wagmi';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-
 export type ProtocolStatsData = {
   totalNotesCreated: bigint;
   tvl: bigint;
@@ -17,8 +15,6 @@ export type ProtocolStatsData = {
 };
 
 export function useProtocolStats(totalNotional: bigint = 0n) {
-  const isDeployed = CONTRACTS.ProtocolStats.address !== ZERO_ADDRESS;
-
   const { data, isLoading, error } = useReadContract({
     address: CONTRACTS.ProtocolStats.address,
     abi: CONTRACTS.ProtocolStats.abi,
@@ -26,7 +22,7 @@ export function useProtocolStats(totalNotional: bigint = 0n) {
     args: [totalNotional],
     chainId: inkSepolia.id,
     query: {
-      enabled: isDeployed,
+      enabled: true,
       refetchInterval: 30_000,
     },
   });

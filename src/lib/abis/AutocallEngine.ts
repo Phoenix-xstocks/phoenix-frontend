@@ -365,7 +365,7 @@ export const AutocallEngineABI = [
   },
   {
     "type": "function",
-    "name": "forceSettleKI",
+    "name": "forceSettleKi",
     "inputs": [
       {
         "name": "noteId",
@@ -818,7 +818,7 @@ export const AutocallEngineABI = [
   },
   {
     "type": "function",
-    "name": "settleKI",
+    "name": "settleKi",
     "inputs": [
       {
         "name": "noteId",

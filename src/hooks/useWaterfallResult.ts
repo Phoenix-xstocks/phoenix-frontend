@@ -4,8 +4,6 @@ import { useReadContract } from 'wagmi';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
 
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
-
 export type WaterfallResult = {
   p1Paid: bigint;
   p2Paid: bigint;
@@ -17,15 +15,13 @@ export type WaterfallResult = {
 };
 
 export function useWaterfallResult() {
-  const isDeployed = CONTRACTS.EpochManager.address !== ZERO_ADDRESS;
-
   const { data, isLoading, error } = useReadContract({
     address: CONTRACTS.EpochManager.address,
     abi: CONTRACTS.EpochManager.abi,
     functionName: 'getLastResult',
     chainId: inkSepolia.id,
     query: {
-      enabled: isDeployed,
+      enabled: true,
       refetchInterval: 60_000,
     },
   });
