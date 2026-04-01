@@ -105,9 +105,22 @@ export default function Home() {
       {/* Hero */}
       <Section className="pt-16">
         {() => (
-          <div className="max-w-2xl text-center space-y-8">
+          <div className="max-w-4xl text-center space-y-8">
             <FadeSlide show={true} direction="up">
-              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-center drop-shadow-lg">
+              <pre className="hidden md:block text-[0.5rem] lg:text-[0.65rem] leading-[1.15] font-mono text-white drop-shadow-lg whitespace-pre text-center select-none" aria-label="Phoenix Protocol">{`██████╗ ██╗  ██╗ ██████╗ ███████╗███╗   ██╗██╗██╗  ██╗
+██╔══██╗██║  ██║██╔═══██╗██╔════╝████╗  ██║██║╚██╗██╔╝
+██████╔╝███████║██║   ██║█████╗  ██╔██╗ ██║██║ ╚███╔╝
+██╔═══╝ ██╔══██║██║   ██║██╔══╝  ██║╚██╗██║██║ ██╔██╗
+██║     ██║  ██║╚██████╔╝███████╗██║ ╚████║██║██╔╝ ██╗
+╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝╚═╝  ╚═╝
+
+██████╗ ██████╗  ██████╗ ████████╗ ██████╗  ██████╗ ██████╗ ██╗
+██╔══██╗██╔══██╗██╔═══██╗╚══██╔══╝██╔═══██╗██╔════╝██╔═══██╗██║
+██████╔╝██████╔╝██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
+██╔═══╝ ██╔══██╗██║   ██║   ██║   ██║   ██║██║     ██║   ██║██║
+██║     ██║  ██║╚██████╔╝   ██║   ╚██████╔╝╚██████╗╚██████╔╝███████╗
+╚═╝     ╚═╝  ╚═╝ ╚═════╝    ╚═╝    ╚═════╝  ╚═════╝ ╚═════╝ ╚══════╝`}</pre>
+              <h1 className="md:hidden text-5xl font-bold tracking-tight text-center drop-shadow-lg text-white">
                 Phoenix Protocol
               </h1>
             </FadeSlide>
@@ -121,13 +134,13 @@ export default function Home() {
             <FadeSlide show={true} direction="up" delay={400}>
               <div className="flex gap-4 justify-center pt-4">
                 <Link
-                  href="/deposit"
+                  href="/app/deposit"
                   className="px-6 py-2.5 rounded-lg font-medium text-xs bg-white text-black hover:bg-white/90 transition-all"
                 >
                   Deposit USDC
                 </Link>
                 <Link
-                  href="/dashboard"
+                  href="/app/dashboard"
                   className="px-6 py-2.5 rounded-lg font-medium text-xs border border-white/20 hover:bg-white/10 backdrop-blur-sm transition-all"
                 >
                   Dashboard
