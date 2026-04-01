@@ -31,7 +31,7 @@ const tokenColors: Record<string, string> = {
   CRYPTOx: 'bg-[#F7931A]/20',
 };
 
-const fullCircleLogos = new Set(['USDC']);
+const fullCircleLogos = new Set(['USDC', 'CRYPTOx', 'DAXx']);
 
 export function TokenIcon({ symbol, size = 'md', className = '' }: TokenIconProps) {
   const px = sizeMap[size];
