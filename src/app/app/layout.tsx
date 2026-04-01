@@ -1,7 +1,6 @@
 'use client';
 
 import { Dock } from '@/components/layout/Dock';
-import { Footer } from '@/components/layout/Footer';
 import { HeroScene } from '@/components/hero-scene';
 import { Toaster } from 'sonner';
 
@@ -19,8 +18,14 @@ export default function AppLayout({
       <div className="relative z-0">
         {children}
       </div>
-      <div className="relative z-0">
-        <Footer />
+      {/* PHOENIX watermark — same as landing page */}
+      <div className="relative overflow-hidden flex items-end justify-center pb-0 mt-20">
+        <span
+          className="select-none pointer-events-none font-bold text-white/[0.1] text-[9rem] md:text-[16rem] lg:text-[23rem] leading-none tracking-tight translate-y-[10%] whitespace-nowrap"
+          style={{ maskImage: 'linear-gradient(to bottom, white 30%, transparent 90%)', WebkitMaskImage: 'linear-gradient(to bottom, white 30%, transparent 90%)' }}
+        >
+          PHOENIX
+        </span>
       </div>
       <Toaster
         theme="dark"

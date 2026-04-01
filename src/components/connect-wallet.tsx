@@ -18,13 +18,24 @@ export function ConnectWallet() {
     );
   }
 
-  if (authenticated && wallets.length > 0) {
+  if (authenticated) {
+    if (wallets.length > 0) {
+      return (
+        <button
+          onClick={logout}
+          className="px-4 py-2 rounded-full text-sm font-medium bg-black text-white hover:bg-black/80 transition-colors"
+        >
+          {shortenAddress(wallets[0].address)}
+        </button>
+      );
+    }
+    // Authenticated but no wallet — logout stale session
     return (
       <button
         onClick={logout}
         className="px-4 py-2 rounded-full text-sm font-medium bg-black text-white hover:bg-black/80 transition-colors"
       >
-        {shortenAddress(wallets[0].address)}
+        Reconnect
       </button>
     );
   }
