@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { HeroScene } from "@/components/hero-scene"
 
 function useInView(ref: React.RefObject<HTMLElement | null>, threshold = 0.3) {
@@ -167,6 +168,17 @@ export default function Home() {
         )}
       </Section>
 
+      {/* The Opportunity */}
+      <Section>
+        {(visible) => (
+          <FadeSlide show={visible} direction="up">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight drop-shadow-lg">
+              The Opportunity
+            </h2>
+          </FadeSlide>
+        )}
+      </Section>
+
       {/* What is an Autocall? */}
       <Section>
         {(visible) => (
@@ -280,9 +292,87 @@ export default function Home() {
         )}
       </Section>
 
+      {/* Structured for Every Scenario */}
+      <Section>
+        {(visible) => (
+          <div className="max-w-3xl w-full space-y-6 text-center">
+            <FadeSlide show={visible} direction="up">
+              <h2 className="text-xl md:text-2xl font-bold tracking-tight drop-shadow-lg">
+                Structured for Every Scenario.
+              </h2>
+            </FadeSlide>
+            <FadeSlide show={visible} direction="up" delay={150}>
+              <p className="text-[10px] md:text-xs text-muted-foreground leading-relaxed drop-shadow-md">
+                See how your capital performs in bull,
+                bear, and worst-case scenarios.
+              </p>
+            </FadeSlide>
+          </div>
+        )}
+      </Section>
+
+      {/* FAQ */}
+      <Section>
+        {(visible) => (
+          <FadeSlide show={visible} direction="up">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight drop-shadow-lg">
+              FAQ
+            </h2>
+          </FadeSlide>
+        )}
+      </Section>
+
       {/* Footer */}
-      <section className="h-screen snap-start snap-always relative overflow-hidden flex items-end justify-center">
-        <span className="select-none pointer-events-none font-bold text-white/[0.04] text-[8rem] md:text-[16rem] lg:text-[20rem] leading-none tracking-tight translate-y-[25%] whitespace-nowrap">
+      <section className="h-screen snap-start snap-always relative flex flex-col justify-center px-8 md:px-16 overflow-hidden">
+        {/* Footer content */}
+        <div className="flex flex-col md:flex-row gap-14 z-10 mb-16 md:pl-[22%]">
+          {/* Left: logo + description */}
+          <div className="md:w-[45%] shrink-0 space-y-4">
+            <div className="flex items-center gap-3">
+              <Image src="/phoenix.svg" alt="Phoenix" width={28} height={28} className="opacity-80" />
+              <span className="text-base font-bold text-white">Phoenix</span>
+            </div>
+            <p className="text-[9px] text-white/40 leading-relaxed">
+              Phoenix Protocol is a decentralized structured yield protocol built on Ethereum. It brings institutional-grade autocallable products onchain with trustless settlement via Chainlink CRE, offering two-sided perpetual vaults with coupon payoffs and barrier-based risk management.
+            </p>
+          </div>
+
+          {/* Right: link columns */}
+          <div className="grid grid-cols-3 gap-8 md:gap-12 flex-1 md:pl-[5%]">
+            <div>
+              <h4 className="text-xs font-bold text-white mb-4">Resources</h4>
+              <ul className="space-y-2.5">
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Product</a></li>
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Scenarios</a></li>
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">FAQ</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white mb-4">Ecosystem</h4>
+              <ul className="space-y-2.5">
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Ink</a></li>
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Chainlink</a></li>
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Tydro</a></li>
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Euler</a></li>
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Nado</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white mb-4">Company</h4>
+              <ul className="space-y-2.5">
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Privacy</a></li>
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Terms</a></li>
+                <li><a href="#" className="text-[10px] text-white/40 hover:text-white/70 transition-colors">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* PHOENIX watermark */}
+        <span
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 select-none pointer-events-none font-bold text-white/[0.1] text-[6rem] md:text-[10rem] lg:text-[15rem] leading-none tracking-tight translate-y-[10%] whitespace-nowrap"
+          style={{ maskImage: 'linear-gradient(to bottom, white 30%, transparent 90%)', WebkitMaskImage: 'linear-gradient(to bottom, white 30%, transparent 90%)' }}
+        >
           PHOENIX
         </span>
       </section>
