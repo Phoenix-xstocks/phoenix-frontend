@@ -25,23 +25,28 @@ export function Dock() {
           <Image src="/phoenix.svg" alt="Phoenix" width={24} height={24} />
         </Link>
 
-        {/* Nav items */}
-        {NAV_LINKS.map((link) => {
-          const isActive = pathname === link.href;
-          return (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`relative text-xs font-medium uppercase tracking-wide whitespace-nowrap transition-colors duration-200 ${
-                isActive
-                  ? 'text-white after:absolute after:left-0 after:-bottom-1 after:w-full after:h-px after:bg-white'
-                  : 'text-white/60 hover:text-white hover:after:absolute hover:after:left-0 hover:after:-bottom-1 hover:after:w-full hover:after:h-px hover:after:bg-white/60'
-              }`}
-            >
-              {link.label}
-            </Link>
-          );
-        })}
+        {/* Nav items container */}
+        <div className="flex items-center h-[42px] rounded-full bg-white px-[3px] gap-[3px]">
+          {NAV_LINKS.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`relative flex items-center justify-center h-[36px] px-5 rounded-full text-[13px] font-semibold uppercase tracking-wide whitespace-nowrap transition-all duration-300 ease-out ${
+                  isActive
+                    ? 'bg-black text-white'
+                    : 'bg-black/80 text-white/70 hover:bg-black hover:text-white'
+                }`}
+              >
+                {link.label}
+                {isActive && (
+                  <span className="absolute -bottom-[5px] left-1/2 -translate-x-1/2 w-[6px] h-[6px] rounded-full bg-white" />
+                )}
+              </Link>
+            );
+          })}
+        </div>
 
         {/* Connect wallet */}
         <ConnectWallet />

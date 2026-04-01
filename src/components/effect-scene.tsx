@@ -81,7 +81,7 @@ function PhoenixModel({
 
     const scaleMultiplier = centerMode ? 0.25 : 0.25
 
-    // 9 waypoints = 9 snap sections, alternating left-right
+    // 10 waypoints = 10 snap sections, alternating left-right
     const waypoints: [number, number][] = [
       [0.0, -0.15],   // 1 Hero: center
       [1.5, -0.3],    // 2 The Opportunity: right
@@ -91,7 +91,8 @@ function PhoenixModel({
       [1.3, -0.2],    // 6 Real-Time Coupon: right
       [-1.4, 0.2],    // 7 Structured Scenario: left
       [1.5, -0.4],    // 8 FAQ: right
-      [-1.5, 0.1],    // 9 Footer: left
+      [0.0, 0.0],     // 9 CTA: center
+      [-1.5, 0.1],    // 10 Footer: left
     ]
 
     if (centerMode) {

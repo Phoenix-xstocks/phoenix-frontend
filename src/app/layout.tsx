@@ -4,9 +4,9 @@ import { Outfit } from 'next/font/google';
 import { Web3Provider } from '@/providers/Web3Provider';
 import './globals.css';
 
-const fkGrotesk = localFont({
-  src: '../../public/fonts/FKGrotesk.woff2',
-  variable: '--font-fk-grotesk',
+const mainFont = localFont({
+  src: '../../public/fonts/Inter-Regular.woff2',
+  variable: '--font-main',
   display: 'swap',
 });
 
@@ -27,7 +27,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${fkGrotesk.variable} ${outfit.variable}`}>
+    <html lang="en" className={`dark ${mainFont.variable} ${outfit.variable}`}>
       <body className="min-h-screen antialiased">
         <Web3Provider>
           {children}
