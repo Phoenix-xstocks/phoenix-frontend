@@ -18,7 +18,7 @@
 body {
   background: var(--background);
   color: #e5e7eb;
-  font-family: var(--font-geist-pixel-triangle), 'Inter', sans-serif;
+  font-family: var(--font-main), 'Inter', sans-serif;
 }
 
 /* Scrollbar styling */

@@ -34,7 +34,7 @@ export function Dock() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`relative flex items-center justify-center h-[36px] px-5 rounded-full text-[13px] font-semibold uppercase tracking-wide whitespace-nowrap transition-all duration-300 ease-out ${
+                className={`relative flex items-center justify-center h-[36px] px-5 rounded-full text-[8px] font-semibold uppercase tracking-wide whitespace-nowrap transition-all duration-300 ease-out ${
                   isActive
                     ? 'bg-black text-white'
                     : 'bg-black/80 text-white/70 hover:bg-black hover:text-white'

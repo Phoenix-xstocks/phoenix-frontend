@@ -1,10 +1,18 @@
 import type { Metadata } from 'next';
-import { GeistPixelTriangle } from 'geist/font/pixel';
+import localFont from 'next/font/local';
 import { Web3Provider } from '@/providers/Web3Provider';
 import { Dock } from '@/components/layout/Dock';
-import { Footer } from '@/components/layout/Footer';
 import { Toaster } from 'sonner';
 import './globals.css';
+
+const mainFont = localFont({
+  src: [
+    { path: '../../public/fonts/PressStart2P-Regular.ttf', weight: '400' },
+    { path: '../../public/fonts/PressStart2P-Regular.ttf', weight: '700' },
+  ],
+  variable: '--font-main',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'Phoenix Protocol',
@@ -17,12 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${GeistPixelTriangle.variable}`}>
+    <html lang="en" className={`dark ${mainFont.variable}`}>
       <body className="min-h-screen antialiased">
         <Web3Provider>
           <Dock />
           {children}
-          <Footer />
           <Toaster
             theme="dark"
             position="bottom-right"
