@@ -15,12 +15,13 @@ const sizeMap = {
 const tokenLogos: Record<string, string> = {
   NASDAQx: '/nasdaq.svg',
   SPXx: '/sp500.svg',
+  USDC: '/usdc.svg',
 };
 
 const tokenColors: Record<string, string> = {
   NASDAQx: 'bg-[#0096D6]/20',
   SPXx: 'bg-[#E3242B]/20',
-  USDC: 'bg-blue-500/20 text-blue-400',
+  USDC: 'bg-[#2775CA]/20',
 };
 
 export function TokenIcon({ symbol, size = 'md', className = '' }: TokenIconProps) {
