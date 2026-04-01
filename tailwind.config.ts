@@ -5,12 +5,24 @@ const config: Config = {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/providers/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: '#0a0a0f',
+        surface: '#111827',
+        'surface-2': '#1f2937',
+        border: '#374151',
+        gain: '#22c55e',
+        loss: '#ef4444',
+        accent: '#06b6d4',
+        'accent-dim': '#0891b2',
+        muted: '#6b7280',
+      },
+      fontFamily: {
+        mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
+        sans: ['Inter', 'sans-serif'],
       },
     },
   },
