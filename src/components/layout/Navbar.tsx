@@ -10,6 +10,7 @@ const NAV_LINKS = [
   { href: '/deposit', label: 'Deposit' },
   { href: '/notes', label: 'My Notes' },
   { href: '/dashboard', label: 'Dashboard' },
+  { href: '/docs', label: 'Docs' },
 ];
 
 export function Navbar() {
@@ -80,7 +81,7 @@ export function Navbar() {
             </Link>
             <div className="hidden md:flex items-center gap-1">
               {NAV_LINKS.map((link) => {
-                const isActive = pathname === link.href;
+                const isActive = link.href === '/' ? pathname === '/' : pathname.startsWith(link.href);
                 return (
                   <Link
                     key={link.href}
