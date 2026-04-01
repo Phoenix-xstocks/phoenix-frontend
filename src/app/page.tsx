@@ -132,12 +132,12 @@ export default function Home() {
         {/* Title centered at top */}
         <div className="flex-1 flex flex-col items-center justify-start pt-10 md:pt-14 z-10">
           <FadeSlide show={true} direction="up" delay={0}>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-center drop-shadow-lg text-white">
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-center drop-shadow-lg text-white">
               Phoenix
             </h1>
           </FadeSlide>
           <FadeSlide show={true} direction="up" delay={100}>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight text-center drop-shadow-lg text-white -mt-1">
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight text-center drop-shadow-lg text-white -mt-2">
               Protocol
             </h1>
           </FadeSlide>
