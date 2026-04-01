@@ -9,15 +9,16 @@ interface ReserveHealthGaugeProps {
 }
 
 function getGaugeColor(bps: number): string {
-  if (bps < 300) return '#ef4444';
-  if (bps < 500) return '#eab308';
+  if (bps < 100) return '#ef4444';
+  if (bps < 300) return '#f97316';
+  if (bps < 1000) return '#eab308';
   return '#22c55e';
 }
 
 export function ReserveHealthGauge({ reserveLevel, isLoading }: ReserveHealthGaugeProps) {
   if (isLoading) {
     return (
-      <div className="bg-surface rounded-xl border border-border p-6 flex flex-col items-center">
+      <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 flex flex-col items-center">
         <Skeleton className="h-4 w-28 mb-4" />
         <Skeleton className="h-32 w-48 rounded-t-full" />
       </div>
@@ -25,7 +26,7 @@ export function ReserveHealthGauge({ reserveLevel, isLoading }: ReserveHealthGau
   }
 
   const bps = Number(reserveLevel);
-  const fillPercent = Math.min(bps / 1000, 1);
+  const fillPercent = Math.min(bps / 2000, 1);
   const color = getGaugeColor(bps);
 
   // SVG semicircular gauge
@@ -41,8 +42,8 @@ export function ReserveHealthGauge({ reserveLevel, isLoading }: ReserveHealthGau
   const emptyLength = circumference - filledLength;
 
   return (
-    <div className="bg-surface rounded-xl border border-border p-6 flex flex-col items-center">
-      <p className="text-sm text-muted mb-4">Reserve Health</p>
+    <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 flex flex-col items-center">
+      <p className="text-sm text-muted-foreground mb-4">Reserve Health</p>
       <div className="relative">
         <svg width="160" height="90" viewBox="0 0 160 90">
           {/* Background arc */}

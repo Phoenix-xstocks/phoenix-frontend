@@ -26,8 +26,8 @@ export function DepositStepper({ currentStep, completedSteps }: DepositStepperPr
                   isCompleted
                     ? 'bg-gain/20 text-gain'
                     : isActive
-                      ? 'bg-accent/20 text-accent ring-2 ring-accent/40 animate-pulse'
-                      : 'bg-surface-2 text-muted border border-border'
+                      ? 'bg-white/10 text-white ring-2 ring-white/30 animate-pulse'
+                      : 'bg-white/5 text-muted-foreground border border-white/10'
                 }`}
               >
                 {isCompleted ? (
@@ -42,19 +42,19 @@ export function DepositStepper({ currentStep, completedSteps }: DepositStepperPr
               <div className="min-w-0">
                 <div
                   className={`text-sm font-medium ${
-                    isCompleted ? 'text-gain' : isActive ? 'text-white' : 'text-muted'
+                    isCompleted ? 'text-gain' : isActive ? 'text-white' : 'text-muted-foreground'
                   }`}
                 >
                   {step.title}
                 </div>
-                <div className="text-xs text-muted truncate">{step.subtitle}</div>
+                <div className="text-xs text-muted-foreground truncate">{step.subtitle}</div>
               </div>
             </div>
 
             {index < steps.length - 1 && (
               <div
                 className={`hidden sm:block flex-1 h-px mx-4 ${
-                  completedSteps.includes(index) ? 'bg-gain/40' : 'bg-border'
+                  completedSteps.includes(index) ? 'bg-gain/40' : 'bg-white/20'
                 }`}
               />
             )}

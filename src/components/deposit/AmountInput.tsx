@@ -38,15 +38,15 @@ export function AmountInput({ value, onChange, balance }: AmountInputProps) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <label className="text-sm font-medium text-muted">Deposit Amount</label>
+        <label className="text-sm font-medium text-muted-foreground">Deposit Amount</label>
         {balance !== undefined && (
-          <span className="text-xs text-muted">
+          <span className="text-xs text-muted-foreground">
             Balance: <span className="font-mono text-white">{formatUSDC(balance)}</span> USDC
           </span>
         )}
       </div>
 
-      <div className="relative flex items-center rounded-xl border border-border bg-surface-2 focus-within:border-accent transition-colors">
+      <div className="relative flex items-center rounded-xl border border-white/10 bg-white/5 backdrop-blur-md focus-within:border-white/30 transition-colors">
         <input
           type="text"
           inputMode="decimal"
@@ -59,12 +59,12 @@ export function AmountInput({ value, onChange, balance }: AmountInputProps) {
           {balance !== undefined && (
             <button
               onClick={handleMax}
-              className="px-2 py-1 text-xs font-medium text-accent bg-accent/10 rounded hover:bg-accent/20 transition-colors"
+              className="px-2 py-1 text-xs font-medium text-white border border-white/20 rounded hover:bg-white/10 backdrop-blur-sm transition-colors"
             >
               MAX
             </button>
           )}
-          <div className="flex items-center gap-1.5 pl-2 border-l border-border">
+          <div className="flex items-center gap-1.5 pl-2 border-l border-white/10">
             <TokenIcon symbol="USDC" size="sm" />
             <span className="text-sm font-medium text-white">USDC</span>
           </div>

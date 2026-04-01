@@ -14,6 +14,10 @@ const tokenColors: Record<string, string> = {
   NVDAx: 'bg-[#76b900]/20 text-[#76b900]',
   TSLAx: 'bg-[#cc0000]/20 text-[#cc0000]',
   METAx: 'bg-[#0668E1]/20 text-[#0668E1]',
+  AAPLx: 'bg-[#A2AAAD]/20 text-[#A2AAAD]',
+  MSFTx: 'bg-[#00A4EF]/20 text-[#00A4EF]',
+  AMZNx: 'bg-[#FF9900]/20 text-[#FF9900]',
+  GOOGLx: 'bg-[#4285F4]/20 text-[#4285F4]',
   USDC: 'bg-blue-500/20 text-blue-400',
 };
 
