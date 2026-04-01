@@ -4,6 +4,8 @@ import { Outfit } from 'next/font/google';
 import { Web3Provider } from '@/providers/Web3Provider';
 import './globals.css';
 
+export const dynamic = 'force-dynamic';
+
 const mainFont = localFont({
   src: '../../public/fonts/Inter-Regular.woff2',
   variable: '--font-main',
