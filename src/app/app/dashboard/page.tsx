@@ -1,27 +1,25 @@
 'use client';
 
 import { useAccount } from 'wagmi';
-import { StreamingCounter } from '@/components/dashboard/StreamingCounter';
-import { StatsGrid } from '@/components/dashboard/StatsGrid';
-import { EpochProgress } from '@/components/dashboard/EpochProgress';
-import { WaterfallChart } from '@/components/dashboard/WaterfallChart';
-import { useProtocolStats } from '@/hooks/useProtocolStats';
-import { useEpochInfo } from '@/hooks/useEpochInfo';
-import { useWaterfallResult } from '@/hooks/useWaterfallResult';
-import { useUserPosition } from '@/hooks/useUserPosition';
+import { PortfolioSummary } from '@/components/dashboard/PortfolioSummary';
+import { NotesList } from '@/components/dashboard/NotesList';
+import { TransactionList } from '@/components/dashboard/TransactionList';
+import { useWalletBalance } from '@/hooks/useWalletBalance';
+import { useUserNotes } from '@/hooks/useUserNotes';
+import { useTransactionHistory } from '@/hooks/useTransactionHistory';
+import { useMemo } from 'react';
 
 export default function DashboardPage() {
   const { isConnected } = useAccount();
-  const { stats, isLoading: isLoadingStats } = useProtocolStats();
-  const {
-    currentEpoch,
-    epochStartTimestamp,
-    epochEndTimestamp,
-    isEpochReady,
-    isLoading: isLoadingEpoch,
-  } = useEpochInfo();
-  const { result, isLoading: isLoadingWaterfall } = useWaterfallResult();
-  const { position, isLoading: isLoadingPosition } = useUserPosition();
+  const { ethBalance, ethFormatted, usdcBalance, isLoading: isLoadingBalance } = useWalletBalance();
+  const { notes, isLoading: isLoadingNotes } = useUserNotes();
+
+  const userNoteIds = useMemo(
+    () => notes.map((n) => n.noteId),
+    [notes]
+  );
+
+  const { events, isLoading: isLoadingHistory } = useTransactionHistory(userNoteIds);
 
   if (!isConnected) {
     return (
@@ -35,33 +33,17 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 md:py-16 space-y-6">
-      {/* Hero: streaming earnings */}
-      <StreamingCounter
-        earnedUsdc={position.earnedUsdc}
-        depositedUsdc={position.depositedUsdc}
-        apyDecimal={position.apyDecimal}
-        lastSyncTimestamp={position.lastSyncTimestamp}
-        hasPosition={position.hasPosition}
-        isLoading={isLoadingPosition}
+      <PortfolioSummary
+        ethBalance={ethBalance}
+        ethFormatted={ethFormatted}
+        usdcBalance={usdcBalance}
+        notes={notes}
+        isLoading={isLoadingBalance || isLoadingNotes}
       />
 
-      {/* Protocol stats */}
-      <StatsGrid stats={stats} isLoading={isLoadingStats} />
+      <NotesList notes={notes} isLoading={isLoadingNotes} />
 
-      {/* Epoch progress */}
-      <EpochProgress
-        currentEpoch={Number(currentEpoch ?? 0n)}
-        epochStartTimestamp={Number(epochStartTimestamp ?? 0n)}
-        epochEndTimestamp={Number(epochEndTimestamp ?? 0n)}
-        isEpochReady={isEpochReady ?? false}
-        isLoading={isLoadingEpoch}
-      />
-
-      {/* Waterfall distribution */}
-      <WaterfallChart
-        result={result}
-        isLoading={isLoadingWaterfall}
-      />
+      <TransactionList events={events} isLoading={isLoadingHistory} />
     </div>
   );
 }
