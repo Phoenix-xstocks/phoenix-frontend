@@ -4,6 +4,13 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { HeroScene } from "@/components/hero-scene"
+import dynamic from "next/dynamic"
+
+const ProblemSection = dynamic(() => import("@/components/landing/ProblemSection").then(m => ({ default: m.ProblemSection })), { ssr: false })
+const ProductSection = dynamic(() => import("@/components/landing/ProductSection").then(m => ({ default: m.ProductSection })), { ssr: false })
+const LandingFeatures = dynamic(() => import("@/components/landing/LandingFeatures").then(m => ({ default: m.LandingFeatures })), { ssr: false })
+const LandingFaq = dynamic(() => import("@/components/landing/LandingFaq").then(m => ({ default: m.LandingFaq })), { ssr: false })
+const CTASection = dynamic(() => import("@/components/landing/CTASection").then(m => ({ default: m.CTASection })), { ssr: false })
 
 function useInView(ref: React.RefObject<HTMLElement | null>, threshold = 0.3) {
   const [visible, setVisible] = useState(false)
@@ -98,7 +105,7 @@ export default function Home() {
   }, [handleScroll])
 
   return (
-    <div ref={scrollRef} className="relative h-screen overflow-y-auto snap-y snap-mandatory">
+    <div ref={scrollRef} className="relative h-screen overflow-y-auto">
       <div className="fixed inset-0 -z-10">
         <HeroScene scrollProgress={scrollProgress} />
       </div>
@@ -109,12 +116,6 @@ export default function Home() {
         <div className="flex items-center justify-between px-8 pt-6 z-10">
           <Link href="/docs" className="text-sm uppercase tracking-widest text-white/70 hover:text-white transition-colors">
             Docs
-          </Link>
-          <Link
-            href="/app/deposit"
-            className="px-6 py-2.5 rounded-lg font-medium text-sm bg-white text-black hover:bg-white/90 transition-all"
-          >
-            Launch App
           </Link>
         </div>
 
@@ -149,179 +150,30 @@ export default function Home() {
         </div>
       </section>
 
-      {/* The Opportunity */}
-      <Section>
-        {(visible) => (
-          <FadeSlide show={visible} direction="up">
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight drop-shadow-lg">
-              The Opportunity
-            </h2>
-          </FadeSlide>
-        )}
-      </Section>
+      {/* The Opportunity — exact component from /frontend */}
+      <div className="snap-start snap-always" style={{ background: 'transparent' }}>
+        <ProblemSection />
+      </div>
 
-      {/* What is an Autocall? */}
-      <Section>
-        {(visible) => (
-          <div className="max-w-3xl w-full space-y-6">
-            <FadeSlide show={visible} direction="up">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight drop-shadow-lg">
-                What is an Autocall?
-              </h2>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={150}>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed drop-shadow-md">
-                An autocall is a structured product that pays a fixed coupon as long as
-                the underlying assets stay above a predefined barrier. If all assets
-                trade above the autocall level on an observation date, the product
-                &ldquo;auto-calls&rdquo; -- it redeems early and returns your principal
-                plus the accrued coupon.
-              </p>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={300}>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed drop-shadow-md">
-                Think of it as a conditional yield strategy: you earn high APY in
-                exchange for taking on limited downside risk tied to the performance of
-                the basket.
-              </p>
-            </FadeSlide>
-          </div>
-        )}
-      </Section>
+      {/* The Product — exact component from /frontend */}
+      <div className="snap-start snap-always" style={{ background: 'transparent' }}>
+        <ProductSection />
+      </div>
 
-      {/* Worst-of Basket */}
-      <Section>
-        {(visible) => (
-          <div className="max-w-3xl w-full space-y-6">
-            <FadeSlide show={visible} direction="up">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight drop-shadow-lg">
-                Worst-of Basket
-              </h2>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={150}>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed drop-shadow-md">
-                The &ldquo;worst-of&rdquo; mechanism means the product&apos;s payoff depends on
-                the worst-performing asset in the basket. This concentrates risk on a
-                single underperformer rather than the average, which is why the yield is
-                higher than single-asset strategies.
-              </p>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={300}>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed drop-shadow-md">
-                Phoenix&apos;s flagship basket tracks 2 tokenized indices (Nasdaq 100 &amp; S&amp;P 500). As long as none
-                of them drops below the knock-in barrier (typically 60-70% of the
-                initial price), your principal is fully protected.
-              </p>
-            </FadeSlide>
-          </div>
-        )}
-      </Section>
+      {/* Structured for Every Scenario — exact component from /frontend */}
+      <div className="snap-start snap-always" style={{ background: 'transparent' }}>
+        <LandingFeatures />
+      </div>
 
-      {/* Delta-Neutral Hedging */}
-      <Section>
-        {(visible) => (
-          <div className="max-w-3xl w-full space-y-6">
-            <FadeSlide show={visible} direction="up">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight drop-shadow-lg">
-                Delta-Neutral Hedging
-              </h2>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={150}>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed drop-shadow-md">
-                Delta-neutral means the protocol continuously offsets its directional
-                exposure to each asset. When the price of an underlying moves, the
-                hedging engine rebalances so that the protocol&apos;s P&L is driven by
-                volatility and time decay -- not by whether markets go up or down.
-              </p>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={300}>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed drop-shadow-md">
-                This is how Phoenix generates yield even in sideways or moderately
-                declining markets: the premium collected from selling structured
-                exposure funds the coupon, while hedging limits the protocol&apos;s risk.
-              </p>
-            </FadeSlide>
-          </div>
-        )}
-      </Section>
+      {/* FAQ — exact component from /frontend */}
+      <div className="snap-start snap-always" style={{ background: 'transparent' }}>
+        <LandingFaq />
+      </div>
 
-      {/* Real-Time Coupon Streaming */}
-      <Section>
-        {(visible) => (
-          <div className="max-w-3xl w-full space-y-6">
-            <FadeSlide show={visible} direction="up">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight drop-shadow-lg">
-                Real-Time Coupon Streaming
-              </h2>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={150}>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed drop-shadow-md">
-                Unlike traditional structured products that pay coupons quarterly or at
-                maturity, Phoenix streams yield directly to your wallet in real time.
-                Every block, your accrued USDC coupon grows -- no lockups, no waiting
-                for observation dates.
-              </p>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={300}>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed drop-shadow-md">
-                You can monitor your earnings live on the dashboard and withdraw
-                accrued coupons at any time. This is DeFi-native structured finance:
-                transparent, composable, and always accessible.
-              </p>
-            </FadeSlide>
-          </div>
-        )}
-      </Section>
-
-      {/* Structured for Every Scenario */}
-      <Section>
-        {(visible) => (
-          <div className="max-w-3xl w-full space-y-6 text-center">
-            <FadeSlide show={visible} direction="up">
-              <h2 className="text-3xl md:text-5xl font-bold tracking-tight drop-shadow-lg">
-                Structured for Every Scenario.
-              </h2>
-            </FadeSlide>
-            <FadeSlide show={visible} direction="up" delay={150}>
-              <p className="text-sm md:text-base text-muted-foreground leading-relaxed drop-shadow-md">
-                See how your capital performs in bull,
-                bear, and worst-case scenarios.
-              </p>
-            </FadeSlide>
-          </div>
-        )}
-      </Section>
-
-      {/* FAQ */}
-      <Section>
-        {(visible) => (
-          <FadeSlide show={visible} direction="up">
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight drop-shadow-lg">
-              FAQ
-            </h2>
-          </FadeSlide>
-        )}
-      </Section>
-
-      {/* CTA */}
-      <section className="h-screen snap-start snap-always flex flex-col items-center justify-end pb-32 px-4">
-        <FadeSlide show={true} direction="up" delay={0}>
-          <div className="text-center space-y-8">
-            <h2 className="text-4xl md:text-6xl font-bold tracking-tight drop-shadow-lg text-white">
-              Ready to Fly?
-            </h2>
-            <p className="text-sm md:text-base text-white/50 max-w-md mx-auto">
-              Deposit USDC. Earn structured yield. No lockups.
-            </p>
-            <Link
-              href="/app/deposit"
-              className="inline-block px-10 py-3.5 rounded-xl font-bold text-base bg-white text-black hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.2)] transition-all duration-300"
-            >
-              Launch App
-            </Link>
-          </div>
-        </FadeSlide>
-      </section>
+      {/* CTA — exact component from /frontend */}
+      <div className="snap-start snap-always" style={{ background: 'transparent' }}>
+        <CTASection />
+      </div>
 
       {/* Footer */}
       <section className="h-screen snap-start snap-always relative flex flex-col justify-center px-8 md:px-16 overflow-hidden">
