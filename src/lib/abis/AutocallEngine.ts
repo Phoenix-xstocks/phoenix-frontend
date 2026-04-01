@@ -684,6 +684,29 @@ export const AutocallEngineABI = [
   },
   {
     "type": "function",
+    "name": "priceNoteDirect",
+    "inputs": [
+      {
+        "name": "noteId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "initialPrices",
+        "type": "int256[]",
+        "internalType": "int256[]"
+      },
+      {
+        "name": "putPremiumBps",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "renounceRole",
     "inputs": [
       {
@@ -717,6 +740,19 @@ export const AutocallEngineABI = [
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "sablierStream",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "address",
+        "internalType": "contract ISablierStream"
+      }
+    ],
+    "stateMutability": "view"
   },
   {
     "type": "function",
@@ -756,6 +792,32 @@ export const AutocallEngineABI = [
   },
   {
     "type": "function",
+    "name": "setSablierStream",
+    "inputs": [
+      {
+        "name": "_sablierStream",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "setTestnetMode",
+    "inputs": [
+      {
+        "name": "_testnet",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "settleKI",
     "inputs": [
       {
@@ -782,6 +844,19 @@ export const AutocallEngineABI = [
         "internalType": "bytes4"
       }
     ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "bool",
+        "internalType": "bool"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "testnetMode",
+    "inputs": [],
     "outputs": [
       {
         "name": "",
@@ -854,6 +929,31 @@ export const AutocallEngineABI = [
       },
       {
         "name": "memoryPaid",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "CouponStreamed",
+    "inputs": [
+      {
+        "name": "noteId",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      },
+      {
+        "name": "streamId",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      },
+      {
+        "name": "amount",
         "type": "uint256",
         "indexed": false,
         "internalType": "uint256"
