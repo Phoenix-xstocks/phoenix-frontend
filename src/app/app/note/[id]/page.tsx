@@ -8,7 +8,9 @@ import { KeyMetricsGrid } from '@/components/note/KeyMetricsGrid';
 import { ObservationTimeline } from '@/components/note/ObservationTimeline';
 import { BarrierChart } from '@/components/note/BarrierChart';
 import { NoteActions } from '@/components/note/NoteActions';
+import { NoteEventTimeline } from '@/components/note/NoteEventTimeline';
 import { useNoteDetail } from '@/hooks/useNoteDetail';
+import { useNoteEventHistory } from '@/hooks/useNoteEventHistory';
 import { NoteState } from '@/lib/noteStates';
 import { shortenAddress } from '@/lib/format';
 
@@ -18,6 +20,7 @@ export default function NoteDetailPage({ params }: { params: { id: string } }) {
   const noteId = params.id as `0x${string}`;
   const isValidId = VALID_NOTE_ID.test(noteId);
   const { note, stateConfig, isLoading, isError } = useNoteDetail(isValidId ? noteId : undefined);
+  const { events: noteEvents, isLoading: isLoadingEvents } = useNoteEventHistory(isValidId ? noteId : undefined);
 
   if (!isValidId) {
     return (
@@ -104,6 +107,8 @@ export default function NoteDetailPage({ params }: { params: { id: string } }) {
             <BarrierChart note={note} />
           </>
         )}
+
+        <NoteEventTimeline events={noteEvents} isLoading={isLoadingEvents} />
 
         <NoteActions note={note} noteId={noteId} />
       </div>

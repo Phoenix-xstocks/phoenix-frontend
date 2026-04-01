@@ -6,6 +6,7 @@ import { createPublicClient, http, type Address } from 'viem';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
 import { type NoteState } from '@/lib/noteStates';
+import type { IndexerUserNote } from '@/lib/indexer-types';
 
 const publicClient = createPublicClient({
   chain: inkSepolia,
@@ -36,29 +37,17 @@ export function useUserNotes() {
   const fetchNotes = useCallback(async () => {
     if (!address) return [];
 
-    const count = Number(
-      await publicClient.readContract({
-        address: CONTRACTS.AutocallEngine.address as Address,
-        abi: CONTRACTS.AutocallEngine.abi,
-        functionName: 'getNoteCount',
-      }) as bigint
-    );
+    // Step 1: Get user's noteIds from the indexer (O(1) query)
+    const res = await fetch(`/api/indexer/user-notes?address=${address}`);
+    if (!res.ok) throw new Error('Failed to fetch user notes from indexer');
+    const indexerNotes: IndexerUserNote[] = await res.json();
 
-    if (count === 0) return [];
+    if (indexerNotes.length === 0) return [];
 
-    const indexCalls = Array.from({ length: count }, (_, i) => ({
-      address: CONTRACTS.AutocallEngine.address as Address,
-      abi: CONTRACTS.AutocallEngine.abi,
-      functionName: 'noteIds' as const,
-      args: [BigInt(i)],
-    }));
+    const noteIds = indexerNotes.map((n) => n.noteId as `0x${string}`);
 
-    const idResults = await publicClient.multicall({ contracts: indexCalls });
-    const allIds = idResults
-      .filter((r) => r.status === 'success')
-      .map((r) => r.result as `0x${string}`);
-
-    const noteCalls = allIds.flatMap((noteId) => [
+    // Step 2: Multicall only for the user's notes (not all notes on-chain)
+    const noteCalls = noteIds.flatMap((noteId) => [
       {
         address: CONTRACTS.AutocallEngine.address as Address,
         abi: CONTRACTS.AutocallEngine.abi,
@@ -76,22 +65,20 @@ export function useUserNotes() {
     const results = await publicClient.multicall({ contracts: noteCalls });
 
     const userNotes: UserNote[] = [];
-    for (let i = 0; i < allIds.length; i++) {
+    for (let i = 0; i < noteIds.length; i++) {
       const noteResult = results[i * 2];
       const statusResult = results[i * 2 + 1];
 
       if (noteResult.status !== 'success' || statusResult.status !== 'success') continue;
 
-      const [basket, notional, holder, state, observations, memoryCoupon, totalCouponBps, createdAt, maturityDate] =
+      const [basket, notional, , state, observations, memoryCoupon, totalCouponBps, createdAt, maturityDate] =
         noteResult.result as [readonly string[], bigint, string, number, number, bigint, bigint, bigint, bigint];
-
-      if (holder.toLowerCase() !== address.toLowerCase()) continue;
 
       const [, , nextObservationTime, currentTriggerBps, couponPerObsBps] =
         statusResult.result as [number, number, bigint, bigint, bigint];
 
       userNotes.push({
-        noteId: allIds[i],
+        noteId: noteIds[i],
         basket,
         notional,
         state: state as NoteState,
@@ -107,7 +94,7 @@ export function useUserNotes() {
     }
 
     return userNotes;
-  }, [publicClient, address]);
+  }, [address]);
 
   useEffect(() => {
     if (!isConnected || !address) {
@@ -144,7 +131,7 @@ export function useUserNotes() {
       cancelled = true;
       clearInterval(interval);
     };
-  }, [isConnected, address, publicClient, fetchNotes]);
+  }, [isConnected, address, fetchNotes]);
 
   return { notes, isLoading, error };
 }

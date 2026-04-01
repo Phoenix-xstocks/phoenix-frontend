@@ -14,6 +14,10 @@ const EVENT_CONFIG: Record<TransactionEventType, { label: string; icon: string; 
   deposit: { label: 'Deposit', icon: '+', color: 'text-cyan-400' },
   coupon: { label: 'Coupon', icon: '$', color: 'text-[#40a040]' },
   settlement: { label: 'Settlement', icon: '=', color: 'text-white' },
+  autocall: { label: 'Autocall', icon: '!', color: 'text-amber-400' },
+  streamed: { label: 'Stream', icon: '~', color: 'text-[#40a040]/70' },
+  missed: { label: 'Missed', icon: 'x', color: 'text-red-400' },
+  cancelled: { label: 'Cancelled', icon: '-', color: 'text-white/40' },
 };
 
 function shortenHash(hash: string): string {
