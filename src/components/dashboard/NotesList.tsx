@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { Skeleton } from '@/components/ui/Skeleton';
 import { BasketIcons } from '@/components/ui/BasketIcons';
+import { StreamingAmount } from '@/components/ui/StreamingAmount';
 import { formatUSDC, formatBps } from '@/lib/format';
 import { NOTE_STATE_CONFIG } from '@/lib/noteStates';
 import type { UserNote } from '@/hooks/useUserNotes';
@@ -89,21 +90,13 @@ export function NotesList({ notes, isLoading }: NotesListProps) {
                   <p className="text-sm font-mono tabular-nums text-white">
                     ${formatUSDC(note.notional)}
                   </p>
-                  {note.streamedAmount > 0n && (
-                    <p className="text-xs font-mono tabular-nums text-[#4080c0]/70">
-                      ${formatUSDC(note.streamedAmount)} streamed
-                    </p>
-                  )}
-                  {note.withdrawable > 0n && (
-                    <p className="text-xs font-mono tabular-nums text-[#40a040]/70">
-                      ${formatUSDC(note.withdrawable)} claimable
-                    </p>
-                  )}
-                  {note.totalCouponBps > 0n && note.streamedAmount === 0n && (
+                  {note.streams.length > 0 ? (
+                    <StreamingAmount streams={note.streams} />
+                  ) : note.totalCouponBps > 0n ? (
                     <p className="text-xs font-mono tabular-nums text-[#40a040]/70">
                       +{formatBps(note.totalCouponBps)} coupon
                     </p>
-                  )}
+                  ) : null}
                 </div>
               </Link>
             );

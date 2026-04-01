@@ -13,6 +13,13 @@ const publicClient = createPublicClient({
   transport: http(),
 });
 
+export interface StreamInfo {
+  deposit: bigint;
+  startTime: number;
+  endTime: number;
+  withdrawn: bigint;
+}
+
 export interface UserNote {
   noteId: `0x${string}`;
   basket: readonly string[];
@@ -26,8 +33,7 @@ export interface UserNote {
   nextObservationTime: bigint;
   currentTriggerBps: bigint;
   couponPerObsBps: bigint;
-  streamedAmount: bigint;
-  withdrawable: bigint;
+  streams: StreamInfo[];
 }
 
 export function useUserNotes() {
@@ -83,31 +89,29 @@ export function useUserNotes() {
 
     const allStreamIds = noteStreamIds.flat();
 
-    // Step 3: Fetch streamed + withdrawable for each stream
-    let streamAmounts: Map<string, { streamed: bigint; withdrawable: bigint }> = new Map();
+    // Step 3: Fetch stream params for each stream
+    let streamInfoMap: Map<string, StreamInfo> = new Map();
     if (allStreamIds.length > 0) {
-      const streamCalls = allStreamIds.flatMap((streamId) => [
-        {
-          address: CONTRACTS.CouponStreamer.address as Address,
-          abi: CONTRACTS.CouponStreamer.abi,
-          functionName: 'getStreamedAmount' as const,
-          args: [streamId],
-        },
-        {
-          address: CONTRACTS.CouponStreamer.address as Address,
-          abi: CONTRACTS.CouponStreamer.abi,
-          functionName: 'getWithdrawable' as const,
-          args: [streamId],
-        },
-      ]);
+      const streamCalls = allStreamIds.map((streamId) => ({
+        address: CONTRACTS.CouponStreamer.address as Address,
+        abi: CONTRACTS.CouponStreamer.abi,
+        functionName: 'getStream' as const,
+        args: [streamId],
+      }));
       const streamResults = await publicClient.multicall({ contracts: streamCalls });
 
       for (let j = 0; j < allStreamIds.length; j++) {
-        const streamedRes = streamResults[j * 2];
-        const withdrawableRes = streamResults[j * 2 + 1];
-        streamAmounts.set(allStreamIds[j].toString(), {
-          streamed: streamedRes.status === 'success' ? (streamedRes.result as bigint) : 0n,
-          withdrawable: withdrawableRes.status === 'success' ? (withdrawableRes.result as bigint) : 0n,
+        const res = streamResults[j];
+        if (res.status !== 'success') continue;
+        const [, deposit, startTime, endTime, withdrawn, canceled] = res.result as [
+          string, bigint, number, number, bigint, boolean,
+        ];
+        if (canceled) continue;
+        streamInfoMap.set(allStreamIds[j].toString(), {
+          deposit,
+          startTime: Number(startTime),
+          endTime: Number(endTime),
+          withdrawn,
         });
       }
     }
@@ -125,15 +129,10 @@ export function useUserNotes() {
       const [, , nextObservationTime, currentTriggerBps, couponPerObsBps] =
         statusResult.result as [number, number, bigint, bigint, bigint];
 
-      // Sum streamed + withdrawable across all streams for this note
-      let streamedAmount = 0n;
-      let withdrawable = 0n;
+      const streams: StreamInfo[] = [];
       for (const sid of noteStreamIds[i]) {
-        const amounts = streamAmounts.get(sid.toString());
-        if (amounts) {
-          streamedAmount += amounts.streamed;
-          withdrawable += amounts.withdrawable;
-        }
+        const info = streamInfoMap.get(sid.toString());
+        if (info) streams.push(info);
       }
 
       userNotes.push({
@@ -149,8 +148,7 @@ export function useUserNotes() {
         nextObservationTime,
         currentTriggerBps,
         couponPerObsBps,
-        streamedAmount,
-        withdrawable,
+        streams,
       });
     }
 
