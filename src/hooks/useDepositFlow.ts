@@ -337,7 +337,8 @@ export function useDepositFlow() {
     }
 
     // Check if claim deadline has passed (24h from requestedAt)
-    if (depositRequest.status === RequestStatus.Pending) {
+    // Skip check while on-chain data hasn't loaded yet (requestedAt = 0)
+    if (depositRequest.status === RequestStatus.Pending && depositRequest.requestedAt > 0n) {
       const now = BigInt(Math.floor(Date.now() / 1_000));
       const deadline = depositRequest.requestedAt + 86_400n; // 24 hours
       if (now > deadline) {

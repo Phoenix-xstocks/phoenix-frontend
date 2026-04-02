@@ -6,14 +6,15 @@ import {
   decodeEventLog,
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
+import { nonceManager } from 'viem';
 import { inkSepolia } from '@/lib/chains';
 import { CONTRACTS } from '@/lib/contracts';
 
 const TOTAL_FEE_BPS = 60n; // 0.6%
 
-// Hardcoded initial prices for hackathon (NASDAQx, SPXx)
-const DEFAULT_INITIAL_PRICES: bigint[] = [2557_000_000n, 62250_000_000n]; // $25.57, $622.50 (8 decimals)
-const DEFAULT_PUT_PREMIUM_BPS = 1106n;
+// Max time to wait for CRE pricing (seconds)
+const PRICING_TIMEOUT_SEC = 120;
+const PRICING_POLL_INTERVAL_MS = 3000;
 
 export async function POST(request: NextRequest) {
   const operatorKey = process.env.OPERATOR_PRIVATE_KEY;
@@ -37,7 +38,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const account = privateKeyToAccount(operatorKey as `0x${string}`);
+  const account = privateKeyToAccount(operatorKey as `0x${string}`, {
+    nonceManager,
+  });
   const transport = http(inkSepolia.rpcUrls.default.http[0]);
 
   const publicClient = createPublicClient({
@@ -52,23 +55,43 @@ export async function POST(request: NextRequest) {
   });
 
   try {
-    // 1. Read the deposit request from the vault
-    const reqData = (await publicClient.readContract({
-      address: CONTRACTS.XYieldVault.address,
-      abi: CONTRACTS.XYieldVault.abi,
-      functionName: 'requests',
-      args: [BigInt(requestId)],
-    })) as readonly [
-      `0x${string}`,
-      `0x${string}`,
-      bigint,
-      `0x${string}`,
-      bigint,
-      bigint,
-      number,
-    ];
+    // 1. Read the deposit request from the vault (retry up to 5 times
+    //    because the RPC may not have the block yet right after tx confirmation)
+    let receiver: `0x${string}` = '0x0';
+    let amount = 0n;
+    let status = -1;
 
-    const [, receiver, amount, , , , status] = reqData;
+    for (let attempt = 0; attempt < 5; attempt++) {
+      const reqData = (await publicClient.readContract({
+        address: CONTRACTS.XYieldVault.address,
+        abi: CONTRACTS.XYieldVault.abi,
+        functionName: 'requests',
+        args: [BigInt(requestId)],
+      })) as readonly [
+        `0x${string}`,
+        `0x${string}`,
+        bigint,
+        `0x${string}`,
+        bigint,
+        bigint,
+        number,
+      ];
+
+      [, receiver, amount, , , , status] = reqData;
+
+      if (amount > 0n) break;
+
+      // Request not found yet — wait and retry
+      console.log(`[operator] Request ${requestId} not found on attempt ${attempt + 1}, retrying...`);
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+
+    if (amount === 0n) {
+      return NextResponse.json(
+        { error: `Request ${requestId} not found (amount is 0)` },
+        { status: 404 },
+      );
+    }
 
     if (status !== 0) {
       return NextResponse.json(
@@ -127,15 +150,34 @@ export async function POST(request: NextRequest) {
     });
     await publicClient.waitForTransactionReceipt({ hash: fulfillHash });
 
-    // 4. priceNoteDirect on engine
-    const priceHash = await walletClient.writeContract({
-      chain: inkSepolia,
-      address: CONTRACTS.AutocallEngine.address,
-      abi: CONTRACTS.AutocallEngine.abi,
-      functionName: 'priceNoteDirect',
-      args: [noteId, DEFAULT_INITIAL_PRICES, DEFAULT_PUT_PREMIUM_BPS],
-    });
-    await publicClient.waitForTransactionReceipt({ hash: priceHash });
+    // 4. Wait for Chainlink CRE to price the note (triggered by RequestPricing event)
+    console.log(`[operator] Waiting for CRE to price note ${noteId}...`);
+    const pricingDeadline = Date.now() + PRICING_TIMEOUT_SEC * 1000;
+    let noteState = 0; // Created
+
+    while (Date.now() < pricingDeadline) {
+      noteState = (await publicClient.readContract({
+        address: CONTRACTS.AutocallEngine.address,
+        abi: CONTRACTS.AutocallEngine.abi,
+        functionName: 'getState',
+        args: [noteId],
+      })) as number;
+
+      if (noteState >= 1) break; // Priced or beyond
+      await new Promise((r) => setTimeout(r, PRICING_POLL_INTERVAL_MS));
+    }
+
+    if (noteState < 1) {
+      console.warn(`[operator] CRE pricing timed out for note ${noteId}, state: ${noteState}`);
+      return NextResponse.json({
+        success: false,
+        noteId,
+        error: 'CRE pricing timed out — note created and fulfilled but not yet priced',
+        txHashes: { createNote: createNoteHash, fulfillDeposit: fulfillHash },
+      });
+    }
+
+    console.log(`[operator] Note ${noteId} priced (state: ${noteState}), activating...`);
 
     // 5. activateNote on engine
     const activateHash = await walletClient.writeContract({
@@ -153,7 +195,6 @@ export async function POST(request: NextRequest) {
       txHashes: {
         createNote: createNoteHash,
         fulfillDeposit: fulfillHash,
-        priceNoteDirect: priceHash,
         activateNote: activateHash,
       },
     });

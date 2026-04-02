@@ -9,13 +9,14 @@ import {
   type WalletClient,
 } from 'viem';
 import { privateKeyToAccount } from 'viem/accounts';
+import { nonceManager } from 'viem';
 import { inkSepolia } from '@/lib/chains';
 import { CONTRACTS } from '@/lib/contracts';
 import { FLAGSHIP_BASKET } from '@/lib/constants';
 
 const TOTAL_FEE_BPS = 60n;
-const DEFAULT_INITIAL_PRICES: bigint[] = [2557_000_000n, 62250_000_000n];
-const DEFAULT_PUT_PREMIUM_BPS = 1106n;
+const PRICING_TIMEOUT_SEC = 120;
+const PRICING_POLL_INTERVAL_MS = 3000;
 
 async function fulfillRequest(
   requestId: bigint,
@@ -92,16 +93,25 @@ async function fulfillRequest(
   });
   await publicClient.waitForTransactionReceipt({ hash: fulfillHash });
 
-  // 3. priceNoteDirect
-  const priceHash = await walletClient.writeContract({
-    account,
-    chain: inkSepolia,
-    address: CONTRACTS.AutocallEngine.address,
-    abi: CONTRACTS.AutocallEngine.abi,
-    functionName: 'priceNoteDirect',
-    args: [noteId, DEFAULT_INITIAL_PRICES, DEFAULT_PUT_PREMIUM_BPS],
-  });
-  await publicClient.waitForTransactionReceipt({ hash: priceHash });
+  // 3. Wait for Chainlink CRE to price the note
+  const pricingDeadline = Date.now() + PRICING_TIMEOUT_SEC * 1000;
+  let noteState = 0;
+
+  while (Date.now() < pricingDeadline) {
+    noteState = (await publicClient.readContract({
+      address: CONTRACTS.AutocallEngine.address,
+      abi: CONTRACTS.AutocallEngine.abi,
+      functionName: 'getState',
+      args: [noteId],
+    })) as number;
+
+    if (noteState >= 1) break;
+    await new Promise((r) => setTimeout(r, PRICING_POLL_INTERVAL_MS));
+  }
+
+  if (noteState < 1) {
+    throw new Error(`CRE pricing timed out for note ${noteId}`);
+  }
 
   // 4. activateNote
   const activateHash = await walletClient.writeContract({
@@ -126,7 +136,9 @@ export async function POST() {
     );
   }
 
-  const account = privateKeyToAccount(operatorKey as `0x${string}`);
+  const account = privateKeyToAccount(operatorKey as `0x${string}`, {
+    nonceManager,
+  });
   const transport = http(inkSepolia.rpcUrls.default.http[0]);
 
   const publicClient = createPublicClient({
