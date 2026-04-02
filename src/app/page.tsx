@@ -220,7 +220,7 @@ export default function Home() {
       </div>
 
       {/* CTA — exact component from /frontend */}
-      <div className="snap-start snap-always" style={{ background: 'transparent' }}>
+      <div className="snap-start snap-always mt-40" style={{ background: 'transparent' }}>
         <CTASection />
       </div>
 

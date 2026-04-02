@@ -34,7 +34,7 @@
 
 .footer-description {
   margin: 1rem auto 80px 0;
-  font-family: 'Noto Sans';
+  font-family: inherit;
   font-size: 0.7rem;
   font-weight: 500;
   line-height: 1.5;
@@ -70,7 +70,7 @@
 
 .footer-right-section p {
   margin-bottom: 1rem;
-  font-family: 'Noto Sans';
+  font-family: inherit;
   font-size: 1rem;
   color: white;
 }
@@ -85,7 +85,7 @@
 
 .footer-right-section ul li a {
   color: rgba(255, 255, 255, 0.5);
-  font-family: 'Noto Sans';
+  font-family: inherit;
   text-decoration: none;
   transition: color 0.2s ease;
 }
@@ -95,7 +95,7 @@
 }
 
 .footer-copyright {
-  font-family: 'Noto Sans';
+  font-family: inherit;
   font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.5);
 }

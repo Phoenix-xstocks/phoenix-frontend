@@ -110,26 +110,10 @@ export function CTASection() {
   }, [])
 
   return (
-    <section ref={sectionRef} className="bg-transparent py-28">
+    <section ref={sectionRef} className="bg-transparent py-0">
       <div className="mx-auto max-w-7xl px-6">
-        {/* Stats counters with dividers */}
-        <div className="grid grid-cols-2 gap-6 sm:gap-12 sm:grid-cols-4 mb-20 pl-0 sm:pl-8 lg:pl-[4.5rem] pr-0 sm:pr-6">
-          {STATS.map((item, idx) => (
-            <div
-              key={item.label}
-              data-stat
-              className={`text-center opacity-0 ${idx < STATS.length - 1 ? 'sm:border-r sm:border-white/5' : ''}`}
-            >
-              <div className="text-3xl font-light text-white sm:text-4xl lg:text-5xl">
-                <AnimatedNumber item={item} inView={inView} />
-              </div>
-              <div className="mt-3 text-sm text-white/[0.5]">{item.label}</div>
-            </div>
-          ))}
-        </div>
-
         {/* CTA card */}
-        <div className="min-h-[50vh] flex items-center justify-center px-8 py-20 text-center sm:px-16">
+        <div className="flex items-center justify-center px-8 py-2 text-center sm:px-16">
           <div>
             <h2
               data-cta-anim

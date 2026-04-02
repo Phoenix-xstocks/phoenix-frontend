@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { Outfit } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import './globals.css';
 
@@ -15,11 +14,6 @@ const mainFont = localFont({
   display: 'swap',
 });
 
-const outfit = Outfit({
-  subsets: ['latin'],
-  variable: '--font-outfit',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'Phoenix Protocol',
@@ -32,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`dark ${mainFont.variable} ${outfit.variable}`}>
+    <html lang="en" className={`dark ${mainFont.variable}`}>
       <body className="min-h-screen antialiased">
         <Web3Provider>
           {children}
