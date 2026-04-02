@@ -220,12 +220,6 @@ export function ProductSection() {
             ref={(el) => {
               if (!el) return
               el.play().catch(() => {})
-              el.onended = () => {
-                setTimeout(() => {
-                  el.currentTime = 0
-                  el.play().catch(() => {})
-                }, 15000)
-              }
             }}
           >
             <source src="/AutocallPayoffV4.mp4" type="video/mp4" />

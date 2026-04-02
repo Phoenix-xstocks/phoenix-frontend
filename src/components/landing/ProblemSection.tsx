@@ -10,9 +10,9 @@ const DEFI_TODAY = [
 ]
 
 const PHOENIX_INTRODUCES = [
-  { stat: 'Path-Dependent Onchain Primitives', desc: 'Autocallable vaults with multi-period observation and barrier logic' },
-  { stat: 'Deterministic Payoff Logic', desc: 'Coupon accrual, barrier evaluation, settlement governed by smart contracts' },
-  { stat: 'Cryptographically Verifiable Returns', desc: 'Every observation signed by Chainlink CRE quorum, every payout provable onchain' },
+  { stat: 'Autocallable Vaults on xStocks', desc: 'Worst-of baskets on Nasdaq 100 & S&P 500 with barrier protection' },
+  { stat: 'Fully Onchain Settlement', desc: 'Every observation and payout executed by smart contracts' },
+  { stat: 'Verified by Chainlink CRE', desc: 'Cryptographic quorum signs every price feed and barrier check' },
 ]
 
 function AnimatedCounter({ target, inView }: { target: number; inView: boolean }) {
