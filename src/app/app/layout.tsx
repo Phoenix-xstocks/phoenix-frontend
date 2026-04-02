@@ -33,7 +33,7 @@ export default function AppLayout({
     <>
       <OperatorStartup />
       <Dock />
-      <div className="relative z-0">
+      <div className="relative z-0 bg-black min-h-screen">
         {children}
       </div>
       {/* PHOENIX watermark — same as landing page */}
