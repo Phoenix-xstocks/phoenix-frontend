@@ -30,13 +30,13 @@ export function PortfolioSummary({
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8">
-        <Skeleton className="h-4 w-32 mb-6" />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div className="space-y-8">
+        <Skeleton className="h-5 w-40" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i}>
-              <Skeleton className="h-3 w-16 mb-2" />
-              <Skeleton className="h-7 w-24" />
+            <div key={i} className="border-l-2 border-white/10 pl-4">
+              <Skeleton className="h-3 w-16 mb-3" />
+              <Skeleton className="h-8 w-24" />
             </div>
           ))}
         </div>
@@ -45,39 +45,44 @@ export function PortfolioSummary({
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8">
-      <p className="text-sm text-white/40 mb-6 tracking-wide uppercase">
-        Portfolio
+    <div className="space-y-8">
+      <div className="flex items-center gap-4">
+        <p className="text-xs uppercase tracking-[0.2em] text-white/50">
+          Portfolio
+        </p>
         {address && (
-          <span className="ml-3 font-mono text-white/20">{shortenAddress(address)}</span>
+          <>
+            <span className="w-px h-3 bg-white/10" />
+            <span className="font-mono text-xs text-white/20">{shortenAddress(address)}</span>
+          </>
         )}
-      </p>
+      </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div>
-          <p className="text-xs text-white/30 uppercase tracking-wide mb-1">ETH</p>
-          <p className="text-xl font-mono tabular-nums text-white">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="border-l-2 border-white/10 pl-4">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-white/40 mb-2">ETH</p>
+          <p className="text-2xl font-light text-white">
             {Number(ethFormatted).toFixed(4)}
           </p>
         </div>
 
-        <div>
-          <p className="text-xs text-white/30 uppercase tracking-wide mb-1">USDC</p>
-          <p className="text-xl font-mono tabular-nums text-white">
+        <div className="border-l-2 border-white/10 pl-4">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-white/40 mb-2">USDC</p>
+          <p className="text-2xl font-light text-white">
             ${formatUSDC(usdcBalance)}
           </p>
         </div>
 
-        <div>
-          <p className="text-xs text-white/30 uppercase tracking-wide mb-1">Active Notes</p>
-          <p className="text-xl font-mono tabular-nums text-white">
+        <div className="border-l-2 border-white/10 pl-4">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-white/40 mb-2">Active Notes</p>
+          <p className="text-2xl font-light text-white">
             {activeNotes.length}
           </p>
         </div>
 
-        <div>
-          <p className="text-xs text-white/30 uppercase tracking-wide mb-1">Total Notional</p>
-          <p className="text-xl font-mono tabular-nums text-[#40a040]">
+        <div className="border-l-2 border-[#40a040]/30 pl-4">
+          <p className="text-[11px] uppercase tracking-[0.2em] text-white/40 mb-2">Total Notional</p>
+          <p className="text-2xl font-light text-[#40a040]">
             ${formatUSDC(totalNotional)}
           </p>
         </div>

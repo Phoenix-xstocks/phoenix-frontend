@@ -59,16 +59,17 @@ export default function DashboardPage() {
 
   if (!isConnected) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8 md:py-16">
-        <div className="bg-white/5 backdrop-blur-md rounded-xl border border-white/10 p-6 text-center text-muted-foreground">
-          Connect your wallet to view your dashboard
+      <div className="mx-auto max-w-5xl px-6 py-20">
+        <div className="text-center py-20">
+          <p className="text-sm text-white/30">Connect your wallet to view your dashboard</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 md:py-16 space-y-6">
+    <div className="mx-auto max-w-5xl px-6 py-12 md:py-20">
+      {/* Portfolio overview */}
       <PortfolioSummary
         ethBalance={ethBalance}
         ethFormatted={ethFormatted}
@@ -77,17 +78,31 @@ export default function DashboardPage() {
         isLoading={isLoadingBalance || isLoadingNotes}
       />
 
-      <PendingClaims onClaimed={handleClaimed} />
+      {/* Divider */}
+      <div className="my-10 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
 
+      {/* Yield stream - hero section */}
       <YieldStream
         notes={notes}
         usdcBalance={usdcBalance}
         isLoading={isLoadingBalance || isLoadingNotes}
       />
 
-      <NotesList notes={notes} isLoading={isLoadingNotes} />
+      {/* Divider */}
+      <div className="my-10 h-px bg-gradient-to-r from-transparent via-white/[0.06] to-transparent" />
 
-      <TransactionList events={events} isLoading={isLoadingHistory} />
+      {/* Pending claims */}
+      <PendingClaims onClaimed={handleClaimed} />
+
+      {/* Notes */}
+      <div className="mt-14">
+        <NotesList notes={notes} isLoading={isLoadingNotes} />
+      </div>
+
+      {/* Transactions */}
+      <div className="mt-14">
+        <TransactionList events={events} isLoading={isLoadingHistory} />
+      </div>
     </div>
   );
 }
