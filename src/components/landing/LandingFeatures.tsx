@@ -12,20 +12,20 @@ interface IFeature {
 const FEATURES_LIST: IFeature[] = [
   {
     id: 'bull',
-    title: 'Bull Market — Early Redemption',
-    description: 'ETH rallies above the autocall barrier. The vault closes early, and you collect all accrued coupons plus your principal.',
+    title: 'Bull Market: Early Redemption',
+    description: 'The basket rallies above the autocall barrier. The vault closes early, and you collect all accrued coupons plus your principal.',
     videoSrc: '/bull-market-early-redemption.mp4'
   },
   {
     id: 'bear-protected',
-    title: 'Bear Market — Capital Protection',
-    description: 'ETH drops but stays above the knock-in barrier. Your capital is fully protected — you get back 100% of your deposit.',
+    title: 'Bear Market: Capital Protection',
+    description: 'The worst-of index drops but stays above the knock-in barrier. Your capital is fully protected, you get back 100% of your deposit.',
     videoSrc: '/bear-market-capital-protection.mp4'
   },
   {
     id: 'bear-loss',
     title: 'Bear Market — Capital Loss',
-    description: 'ETH crashes below the knock-in barrier at maturity. You absorb losses proportional to the drop — the worst-case scenario.',
+    description: 'The worst-performing index crashes below the knock-in barrier at maturity. You absorb losses proportional to the drop, the worst-case scenario.',
     videoSrc: '/bear-market-capital-loss.mp4'
   }
 ];
