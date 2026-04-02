@@ -29,7 +29,6 @@ export function PendingClaims({ onClaimed }: PendingClaimsProps) {
     hash: claimTxHash,
   });
 
-  // Fire onClaimed once tx is confirmed
   useEffect(() => {
     if (claimConfirmed && claimedDepositRef.current && onClaimed) {
       onClaimed(claimedDepositRef.current);
@@ -62,12 +61,15 @@ export function PendingClaims({ onClaimed }: PendingClaimsProps) {
   if (isLoading || claimable.length === 0) return null;
 
   return (
-    <div className="rounded-2xl border border-[#40a040]/30 bg-[#40a040]/5 p-6">
-      <p className="text-sm text-[#40a040] mb-4 tracking-wide uppercase font-medium">
-        Ready to Claim
-      </p>
+    <div className="space-y-5">
+      <div className="flex items-center gap-3">
+        <div className="w-1.5 h-1.5 rounded-full bg-[#40a040] animate-pulse" />
+        <p className="text-xs uppercase tracking-[0.2em] text-[#40a040]/80 font-medium">
+          Ready to Claim
+        </p>
+      </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {claimable.map((deposit) => {
           const deadlineTs =
             Number(deposit.readyAt) +
@@ -76,15 +78,15 @@ export function PendingClaims({ onClaimed }: PendingClaimsProps) {
           return (
             <div
               key={deposit.requestId.toString()}
-              className="flex items-center justify-between gap-4 p-4 rounded-xl border border-white/5 bg-white/[0.02]"
+              className="flex items-center justify-between gap-4 p-5 rounded-xl border border-[#40a040]/15 bg-[#40a040]/[0.03] hover:bg-[#40a040]/[0.05] transition-colors duration-300"
             >
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-white font-mono tabular-nums">
+                <p className="text-lg font-light tabular-nums text-white">
                   {formatUSDC(deposit.amount)} USDC
                 </p>
-                <div className="flex items-center gap-2 mt-1 text-xs text-white/30">
+                <div className="flex items-center gap-2 mt-1.5 text-[11px] text-white/25">
                   <span>Request #{deposit.requestId.toString()}</span>
-                  <span className="w-px h-3 bg-white/10" />
+                  <span className="w-px h-2.5 bg-white/10" />
                   <span>
                     Deadline: <CountdownTimer targetTimestamp={deadlineTs} />
                   </span>
@@ -94,7 +96,7 @@ export function PendingClaims({ onClaimed }: PendingClaimsProps) {
               <button
                 onClick={() => handleClaim(deposit)}
                 disabled={isClaiming || claimConfirmed}
-                className="px-5 py-2.5 rounded-lg bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors disabled:bg-white/20 disabled:text-white/40 disabled:cursor-not-allowed"
+                className="px-6 py-2.5 rounded-full border border-white bg-white text-black text-sm font-medium hover:bg-white/90 transition-colors disabled:bg-white/10 disabled:text-white/30 disabled:border-white/10 disabled:cursor-not-allowed"
               >
                 {isClaiming ? 'Claiming...' : claimConfirmed ? 'Claimed!' : 'Claim Note'}
               </button>

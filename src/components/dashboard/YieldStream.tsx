@@ -68,8 +68,8 @@ export function YieldStream({ notes, usdcBalance, isLoading }: YieldStreamProps)
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
-        <Skeleton className="h-10 w-64 mx-auto" />
+      <div className="py-12 text-center">
+        <Skeleton className="h-12 w-72 mx-auto" />
       </div>
     );
   }
@@ -77,17 +77,18 @@ export function YieldStream({ notes, usdcBalance, isLoading }: YieldStreamProps)
   const hasPosition = activeNotes.length > 0;
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center">
-      <p className="text-xs text-white/30 uppercase tracking-widest mb-4">Yield Stream</p>
-      <p className="text-3xl md:text-4xl font-mono tabular-nums text-white tracking-tight">
-        <span className="text-white/40">$</span>
+    <div className="py-12 text-center">
+      <p className="text-xs uppercase tracking-[0.2em] text-white/40 mb-6">Yield Stream</p>
+      <p className="text-5xl md:text-6xl lg:text-7xl font-light tabular-nums text-white tracking-tight">
+        <span className="text-white/30">$</span>
         {hasPosition ? displayValue : '0.00000000'}
       </p>
       {hasPosition && (
-        <p className="text-xs text-[#40a040]/60 font-mono mt-2">
+        <p className="text-sm text-[#40a040]/50 font-mono mt-4 tracking-wide">
           +${ratePerSec.toFixed(8)}/s
         </p>
       )}
+      <div className="mt-6 mx-auto w-32 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
     </div>
   );
 }

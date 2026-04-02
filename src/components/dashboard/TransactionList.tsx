@@ -27,11 +27,11 @@ function shortenHash(hash: string): string {
 export function TransactionList({ events, isLoading }: TransactionListProps) {
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-        <Skeleton className="h-4 w-32 mb-5" />
-        <div className="space-y-3">
+      <div className="space-y-6">
+        <Skeleton className="h-4 w-32" />
+        <div className="space-y-2">
           {Array.from({ length: 3 }).map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full rounded-lg" />
+            <Skeleton key={i} className="h-14 w-full rounded-xl" />
           ))}
         </div>
       </div>
@@ -41,31 +41,31 @@ export function TransactionList({ events, isLoading }: TransactionListProps) {
   const explorerUrl = inkSepolia.blockExplorers.default.url;
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6">
-      <p className="text-sm text-white/40 mb-5 tracking-wide uppercase">Recent Activity</p>
+    <div className="space-y-6">
+      <p className="text-xs uppercase tracking-[0.2em] text-white/50">Recent Activity</p>
 
       {events.length === 0 ? (
-        <p className="text-center text-white/20 py-6">No transactions yet</p>
+        <p className="text-center text-white/20 py-8 text-sm">No transactions yet</p>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           {events.map((evt, i) => {
             const config = EVENT_CONFIG[evt.type];
             return (
               <div
                 key={`${evt.txHash}-${i}`}
-                className="flex items-center gap-3 px-4 py-3 rounded-lg border border-white/5 bg-white/[0.01]"
+                className="flex items-center gap-4 px-5 py-3.5 rounded-xl border border-white/[0.06] bg-white/[0.015] hover:bg-white/[0.03] transition-colors duration-300"
               >
                 <span
-                  className={`w-7 h-7 flex items-center justify-center rounded-full bg-white/5 font-mono text-sm ${config.color}`}
+                  className={`w-8 h-8 flex items-center justify-center rounded-full border border-white/[0.06] font-mono text-sm ${config.color}`}
                 >
                   {config.icon}
                 </span>
 
                 <div className="flex-1 min-w-0">
-                  <span className={`text-sm ${config.color}`}>{config.label}</span>
+                  <span className={`text-sm font-medium ${config.color}`}>{config.label}</span>
                 </div>
 
-                <span className="text-sm font-mono tabular-nums text-white">
+                <span className="text-base font-light tabular-nums text-white">
                   ${formatUSDC(evt.amount)}
                 </span>
 
@@ -73,7 +73,7 @@ export function TransactionList({ events, isLoading }: TransactionListProps) {
                   href={`${explorerUrl}/tx/${evt.txHash}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-mono text-white/20 hover:text-white/50 transition-colors"
+                  className="text-[11px] font-mono text-white/15 hover:text-white/40 transition-colors"
                 >
                   {shortenHash(evt.txHash)}
                 </a>
