@@ -105,7 +105,7 @@ function PhoenixModel({
       const idleBob = Math.sin(elapsed * 0.3) * 0.03
       const idleSway = Math.sin(elapsed * 0.12) * 0.03
 
-      groupRef.current.scale.setScalar(scaleMultiplier)
+      groupRef.current.scale.setScalar(baseScale)
       groupRef.current.position.x = -1.2 + idleSway
       groupRef.current.position.y = 0.4 + idleBob
       groupRef.current.position.z = 0
