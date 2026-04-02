@@ -1,23 +1,58 @@
 'use client';
 
+import { useCallback, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { PortfolioSummary } from '@/components/dashboard/PortfolioSummary';
+import { PendingClaims } from '@/components/dashboard/PendingClaims';
 import { YieldStream } from '@/components/dashboard/YieldStream';
 import { NotesList } from '@/components/dashboard/NotesList';
 import { TransactionList } from '@/components/dashboard/TransactionList';
 import { useWalletBalance } from '@/hooks/useWalletBalance';
 import { useUserNotes } from '@/hooks/useUserNotes';
 import { useTransactionHistory } from '@/hooks/useTransactionHistory';
-import { useMemo } from 'react';
+import { NoteState } from '@/lib/noteStates';
+import { FLAGSHIP_BASKET, PROTOCOL_CONSTANTS } from '@/lib/constants';
+import type { ClaimableDeposit } from '@/hooks/useClaimableDeposits';
 
 export default function DashboardPage() {
   const { isConnected } = useAccount();
   const { ethBalance, ethFormatted, usdcBalance, isLoading: isLoadingBalance } = useWalletBalance();
-  const { notes, isLoading: isLoadingNotes } = useUserNotes();
+  const { notes, isLoading: isLoadingNotes, addOptimisticNote } = useUserNotes();
+
+  const handleClaimed = useCallback(
+    (deposit: ClaimableDeposit) => {
+      const netAmount =
+        deposit.amount -
+        (deposit.amount * PROTOCOL_CONSTANTS.TOTAL_FEE_BPS) / 10_000n;
+
+      addOptimisticNote({
+        noteId: deposit.noteId,
+        basket: [...FLAGSHIP_BASKET],
+        notional: netAmount,
+        state: NoteState.Active,
+        observations: 0,
+        memoryCoupon: 0n,
+        totalCouponBps: 0n,
+        createdAt: BigInt(Math.floor(Date.now() / 1000)),
+        maturityDate: BigInt(
+          Math.floor(Date.now() / 1000) +
+            PROTOCOL_CONSTANTS.MATURITY_DAYS * 86400,
+        ),
+        nextObservationTime: BigInt(
+          Math.floor(Date.now() / 1000) +
+            PROTOCOL_CONSTANTS.OBS_INTERVAL_DAYS * 86400,
+        ),
+        currentTriggerBps: BigInt(PROTOCOL_CONSTANTS.AUTOCALL_TRIGGER_BPS),
+        couponPerObsBps: 0n,
+        streams: [],
+      });
+    },
+    [addOptimisticNote],
+  );
 
   const userNoteIds = useMemo(
     () => notes.map((n) => n.noteId),
-    [notes]
+    [notes],
   );
 
   const { events, isLoading: isLoadingHistory } = useTransactionHistory(userNoteIds);
@@ -41,6 +76,8 @@ export default function DashboardPage() {
         notes={notes}
         isLoading={isLoadingBalance || isLoadingNotes}
       />
+
+      <PendingClaims onClaimed={handleClaimed} />
 
       <YieldStream
         notes={notes}

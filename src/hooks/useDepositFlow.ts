@@ -265,6 +265,7 @@ export function useDepositFlow() {
   }, [approveConfirmed, state.step, requestDeposit]);
 
   // Request confirmed -> extract requestId from DepositRequested event log
+  // then trigger the operator API to fulfill the deposit
   useEffect(() => {
     if (requestConfirmed && requestReceipt && state.step === 'requesting') {
       let requestId = 0n;
@@ -287,8 +288,18 @@ export function useDepositFlow() {
         }
       }
       dispatch({ type: 'REQUEST_CONFIRMED', requestId });
+
+      // Trigger operator auto-fulfill
+      fetch('/api/operator/fulfill', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requestId: Number(requestId),
+          basket: state.basket,
+        }),
+      }).catch((err) => console.error('Operator fulfill failed:', err));
     }
-  }, [requestConfirmed, requestReceipt, state.step]);
+  }, [requestConfirmed, requestReceipt, state.step, state.basket]);
 
   // Claim confirmed -> extract noteTokenId from DepositClaimed event log
   useEffect(() => {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useAccount } from 'wagmi';
 import { createPublicClient, http, type Address } from 'viem';
 import { CONTRACTS } from '@/lib/contracts';
@@ -39,6 +39,7 @@ export interface UserNote {
 export function useUserNotes() {
   const { address, isConnected } = useAccount();
   const [notes, setNotes] = useState<UserNote[]>([]);
+  const [optimisticNotes, setOptimisticNotes] = useState<UserNote[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -192,5 +193,26 @@ export function useUserNotes() {
     };
   }, [isConnected, address, fetchNotes]);
 
-  return { notes, isLoading, error };
+  const addOptimisticNote = useCallback((note: UserNote) => {
+    setOptimisticNotes((prev) => {
+      if (prev.some((n) => n.noteId === note.noteId)) return prev;
+      return [note, ...prev];
+    });
+  }, []);
+
+  // Merge: show optimistic notes that aren't yet in the real list
+  const mergedNotes = useMemo(() => {
+    const realIds = new Set(notes.map((n) => n.noteId));
+    const pending = optimisticNotes.filter((n) => !realIds.has(n.noteId));
+    return [...pending, ...notes];
+  }, [notes, optimisticNotes]);
+
+  // Clean up optimistic notes once they appear in real data
+  useEffect(() => {
+    if (notes.length === 0 || optimisticNotes.length === 0) return;
+    const realIds = new Set(notes.map((n) => n.noteId));
+    setOptimisticNotes((prev) => prev.filter((n) => !realIds.has(n.noteId)));
+  }, [notes, optimisticNotes]);
+
+  return { notes: mergedNotes, isLoading, error, addOptimisticNote };
 }
