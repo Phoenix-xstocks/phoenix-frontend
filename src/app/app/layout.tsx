@@ -1,7 +1,28 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import { Dock } from '@/components/layout/Dock';
 import { Toaster } from 'sonner';
+
+function OperatorStartup() {
+  const ran = useRef(false);
+  useEffect(() => {
+    if (ran.current) return;
+    ran.current = true;
+    fetch('/api/operator/fulfill-pending', { method: 'POST' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.fulfilled?.length > 0) {
+          console.log(`[operator] Fulfilled ${data.fulfilled.length} pending requests at startup`);
+        }
+        if (data.errors?.length > 0) {
+          console.warn('[operator] Errors:', data.errors);
+        }
+      })
+      .catch((err) => console.error('[operator] Startup scan failed:', err));
+  }, []);
+  return null;
+}
 
 export default function AppLayout({
   children,
@@ -10,6 +31,7 @@ export default function AppLayout({
 }) {
   return (
     <>
+      <OperatorStartup />
       <Dock />
       <div className="relative z-0">
         {children}

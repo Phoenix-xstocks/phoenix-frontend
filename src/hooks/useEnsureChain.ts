@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import { useChainId, useSwitchChain } from 'wagmi';
+import { useAccount, useSwitchChain } from 'wagmi';
 import { inkSepolia } from '@/lib/chains';
 
 export function useEnsureChain() {
-  const chainId = useChainId();
+  const { chainId } = useAccount();
   const { switchChainAsync } = useSwitchChain();
 
   const ensureChain = useCallback(async () => {
