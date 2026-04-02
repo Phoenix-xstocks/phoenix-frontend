@@ -245,6 +245,7 @@ export default function Home() {
               <h4 className="text-base font-bold text-white mb-4">Resources</h4>
               <ul className="space-y-2.5">
                 <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Product</a></li>
+                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Basket</a></li>
                 <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Scenarios</a></li>
                 <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">FAQ</a></li>
               </ul>
@@ -255,7 +256,6 @@ export default function Home() {
                 <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Ink</a></li>
                 <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Chainlink</a></li>
                 <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Tydro</a></li>
-                <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Euler</a></li>
                 <li><a href="#" className="text-sm text-white/[0.5] hover:text-white/70 transition-colors">Nado</a></li>
               </ul>
             </div>
