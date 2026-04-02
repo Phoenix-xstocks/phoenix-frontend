@@ -184,7 +184,7 @@ export function ProductSection() {
             className="mt-6 text-white/[0.5] leading-relaxed opacity-0"
           >
             Autocallables are structured financial products used by institutions
-            worldwide. Phoenix brings them onchain — fully transparent,
+            worldwide. Phoenix brings them onchain, fully transparent,
             permissionless, and settled by smart contracts. Deposit USDC, earn
             periodic coupons, and benefit from built-in capital protection.
           </p>

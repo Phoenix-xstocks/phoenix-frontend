@@ -24,7 +24,7 @@ const FEATURES_LIST: IFeature[] = [
   },
   {
     id: 'bear-loss',
-    title: 'Bear Market — Capital Loss',
+    title: 'Bear Market: Capital Loss',
     description: 'The worst-performing index crashes below the knock-in barrier at maturity. You absorb losses proportional to the drop, the worst-case scenario.',
     videoSrc: '/bear-market-capital-loss.mp4'
   }

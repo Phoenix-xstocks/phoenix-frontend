@@ -189,7 +189,7 @@ export default function Home() {
                 Tokenized Indices, Onchain.
               </h2>
               <p className="text-sm text-white/[0.5] leading-relaxed">
-                Phoenix&apos;s flagship vault tracks a worst-of basket of two tokenized indices powered by xStocks: the <span className="text-[#0096D6]">Nasdaq 100</span> and the <span className="text-[#E3242B]">S&P 500</span>. The payoff depends on the worst performer — if neither drops below the 70% knock-in barrier at maturity, your capital is fully protected.
+                Phoenix&apos;s flagship vault tracks a worst-of basket of two tokenized indices powered by xStocks: the <span className="text-[#0096D6]">Nasdaq 100</span> and the <span className="text-[#E3242B]">S&P 500</span>. The payoff depends on the worst performer. If neither drops below the 70% knock-in barrier at maturity, your capital is fully protected.
               </p>
               <div className="grid grid-cols-2 gap-4">
                 <div className="border-l-2 border-white/10 pl-4">
