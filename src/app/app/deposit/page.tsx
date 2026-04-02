@@ -157,9 +157,9 @@ export default function DepositPage() {
           requestId={state.requestId ?? 0n}
           amount={amountBigInt}
           basket={state.basket}
-          requestedAt={depositRequest?.requestedAt !== undefined
+          requestedAt={depositRequest?.requestedAt && depositRequest.requestedAt > 0n
             ? Number(depositRequest.requestedAt)
-            : 0 /* fallback until on-chain data loads */}
+            : Math.floor(Date.now() / 1000)}
           status={state.step as 'pending' | 'ready' | 'expired'}
           onClaim={claimDeposit}
           onRefund={handleRefund}
