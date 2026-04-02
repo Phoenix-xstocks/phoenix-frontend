@@ -162,7 +162,7 @@ export default function Home() {
       </div>
 
       {/* The Product — exact component from /frontend */}
-      <div className="snap-start snap-always" style={{ background: 'transparent' }}>
+      <div className="snap-start snap-always mb-40" style={{ background: 'transparent' }}>
         <ProductSection />
       </div>
 

@@ -163,7 +163,7 @@ export function ProductSection() {
   }, [])
 
   return (
-    <section id="product" ref={sectionRef} className="scroll-mt-12 bg-transparent pt-0 pb-4">
+    <section id="product" ref={sectionRef} className="scroll-mt-12 bg-transparent pt-20 pb-20">
       <div className="mx-auto max-w-7xl px-6">
         {/* Sub-block A: Identity */}
         <div className="max-w-2xl">
@@ -207,7 +207,7 @@ export function ProductSection() {
         </div>
 
         {/* Sub-block B.5: Vault Preview */}
-        <div className="mt-12 sm:mt-30" data-vault-card>
+        <div className="mt-32 sm:mt-40" data-vault-card>
           <h2 className="text-2xl sm:text-4xl lg:text-5xl font-light text-white mb-6">
             How It Works
           </h2>

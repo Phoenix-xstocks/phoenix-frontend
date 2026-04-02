@@ -84,20 +84,20 @@ function PhoenixModel({
       mixer.update(0)
     }
 
-    const scaleMultiplier = centerMode ? 0.1 : 0.25
+    const baseScale = centerMode ? 0.1 : 0.25
 
-    // 10 waypoints = 10 snap sections, alternating left-right
-    const waypoints: [number, number][] = [
-      [0.0, -0.15],   // 1 Hero: center
-      [1.5, -0.3],    // 2 The Opportunity: right
-      [-1.3, 0.3],    // 3 What is an Autocall: left
-      [1.4, -0.5],    // 4 Worst-of Basket: right
-      [-1.5, 0.1],    // 5 Delta-Neutral: left
-      [1.3, -0.2],    // 6 Real-Time Coupon: right
-      [-1.4, 0.2],    // 7 Structured Scenario: left
-      [1.5, -0.4],    // 8 FAQ: right
-      [0.0, 0.0],     // 9 CTA: center
-      [-1.5, 0.1],    // 10 Footer: left
+    // 9 waypoints: [x, y, scale]
+    const waypoints: [number, number, number][] = [
+      [0.0, -0.15, 0.25],    // 1 Hero: center, big
+      [1.4, -1.0, 0.12],     // 2 Opportunity: bottom-right, small
+      [1.4, 0.8, 0.12],      // 3 Product: top-right, small
+      [0.0, 0.0, 0.08],      // 4 How it works: center, hidden behind video
+      [-1.2, -0.7, 0.10],    // 5 Basket: bottom-left, small
+      [-1.4, -0.5, 0.12],    // 6 Scenarios: left, bottom-mid, small
+      [-1.4, -0.5, 0.12],    // 7 FAQ: more left, bottom-mid, same spot
+      [-1.4, -0.5, 0.12],    // 7b FAQ continues: stays left
+      [1.5, 0.0, 0.13],      // 8 CTA: far right
+      [-1.5, 0.1, 0.25],     // 9 Footer: left, same as before
     ]
 
     if (centerMode) {
@@ -141,16 +141,17 @@ function PhoenixModel({
 
       const posX = catmullRom(waypoints[i0][0], waypoints[i1][0], waypoints[i2][0], waypoints[i3][0], p)
       const posY = catmullRom(waypoints[i0][1], waypoints[i1][1], waypoints[i2][1], waypoints[i3][1], p)
+      const scaleVal = catmullRom(waypoints[i0][2], waypoints[i1][2], waypoints[i2][2], waypoints[i3][2], p)
 
       // Subtle idle bob
       const idleBob = Math.sin(elapsed * 0.8) * 0.04
 
-      groupRef.current.scale.setScalar(scaleMultiplier)
+      groupRef.current.scale.setScalar(Math.max(0.05, scaleVal))
       groupRef.current.position.x = posX
       groupRef.current.position.y = posY + idleBob
 
       // Blend between hero pose (face camera) and normal pose (side profile)
-      const heroBlend = Math.max(0, 1 - clampedT * 10)
+      const heroBlend = Math.max(0, 1 - clampedT * 8)
 
       // Bank into the direction of movement for a natural flight feel
       const bankZ = -Math.cos(t * Math.PI * 2) * 0.15 * Math.min(scrollSpeed.current * 3, 1)
