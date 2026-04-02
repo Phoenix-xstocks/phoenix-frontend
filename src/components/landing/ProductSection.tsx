@@ -7,25 +7,25 @@ const PILLARS = [
   {
     title: 'Enhanced Yield',
     description:
-      'Earn above-market coupon rates through autocallable structured products, with payouts every observation period.',
+      'Earn ~0.75% per month through worst-of autocall on SPY & QQQ, with monthly coupon payments.',
   },
   {
     title: 'Capital Protection',
     description:
-      'Knock-in barriers protect your capital from downside. You only face losses if the underlying drops below the barrier at maturity.',
+      '70% knock-in barrier protects your capital. You only lose if the worst index drops 30%+ at maturity.',
   },
   {
-    title: 'Two-Sided Vaults',
+    title: 'Fully Onchain',
     description:
-      'Side A deposits the underlying asset and earns USDC coupons. Side B deposits USDC and profits from knock-in events. Balanced risk-reward.',
+      'Every observation, coupon, and settlement executed by smart contracts on Ink. No intermediaries.',
   },
 ]
 
 const VAULT_PARAMS = [
-  { label: 'Coupon Rate', value: '~1.7%', sub: 'per observation' },
+  { label: 'Coupon Rate', value: '~0.75%', sub: 'per observation' },
   { label: 'Autocall Barrier', value: '100%', sub: 'steps down 2%/obs' },
   { label: 'Knock-in Barrier', value: '70%', sub: 'at maturity' },
-  { label: 'Maturity', value: '6', sub: 'months · 6 obs' },
+  { label: 'Maturity', value: '6', sub: 'months' },
 ]
 
 /* kept for later

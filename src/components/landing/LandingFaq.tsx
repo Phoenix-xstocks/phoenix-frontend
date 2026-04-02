@@ -22,25 +22,25 @@ const FAQ_ITEMS: IFaqItem[] = [
   {
     id: 'what-is-phoenix',
     question: 'What is Phoenix Protocol?',
-    answer: 'Phoenix Protocol brings institutional-grade autocallable structured products onchain. Perpetual two-sided vaults with coupon payoffs, barrier logic, and fully automated settlement powered by Chainlink CRE.',
+    answer: 'Phoenix brings institutional autocallable structured products onchain. Deposit USDC into a worst-of vault on tokenized indices (SPY/QQQ), earn periodic coupons with built-in downside protection, fully settled on Ink.',
     theme: 'General'
   },
   {
     id: 'how-it-works',
-    question: 'How do perpetual vaults work?',
-    answer: 'Each vault has two sides: Side A deposits the underlying asset and earns USDC coupons, Side B deposits USDC and profits from knock-in events. Chainlink CRE evaluates price barriers each period and settles automatically. Cycles reset perpetually with a new strike.',
+    question: 'How does the vault work?',
+    answer: 'You deposit USDC. Every month, the protocol checks if SPY and QQQ are above 70% of their starting price. If yes, you earn a coupon. If both are above 100%, you get your capital back early (autocall). At maturity, if neither dropped below 70%, you get everything back.',
     theme: 'Usage'
   },
   {
     id: 'supported-assets',
     question: 'What assets are supported?',
-    answer: '19 vaults across 5 categories: Spot (ETH, BTC, SOL, stETH, wstETH), Perps (ETH, BTC, SOL via Hyperliquid), Yield tokens (Pendle YT), Rates (Aave supply rates), and Equities (TSLA, AAPL, NVDA via xStocks).',
+    answer: 'Currently one vault: worst-of basket on the S&P 500 (wSPYx) and Nasdaq 100 (wQQQx), powered by xStocks tokenized indices on Ink.',
     theme: 'Usage'
   },
   {
     id: 'getting-started',
     question: 'How do I get started?',
-    answer: 'Connect your wallet on Ethereum Sepolia, choose Earn (Side A) or Hedge (Side B), browse vaults, and deposit. The protocol handles observations, coupons, and cycle resets automatically.',
+    answer: 'Connect your wallet on Ink, deposit USDC (minimum $100), and the protocol handles observations, coupons, and settlement automatically.',
     theme: 'Usage'
   },
 ];

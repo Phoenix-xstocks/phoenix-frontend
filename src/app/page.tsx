@@ -235,7 +235,7 @@ export default function Home() {
               <span className="text-xl font-bold text-white">Phoenix</span>
             </div>
             <p className="text-sm text-white/[0.5] leading-relaxed">
-              Phoenix Protocol is a decentralized structured yield protocol built on Ethereum. It brings institutional-grade autocallable products onchain with trustless settlement via Chainlink CRE, offering two-sided perpetual vaults with coupon payoffs and barrier-based risk management.
+              Phoenix Protocol is a decentralized structured yield protocol built on Ink. Deposit USDC into worst-of autocallable vaults on tokenized indices, earn periodic coupons with built-in capital protection, fully settled onchain.
             </p>
           </div>
 

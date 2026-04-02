@@ -7,62 +7,47 @@ const FAQ_ITEMS = [
   {
     id: "what-is-phoenix",
     question: "What is Phoenix Protocol?",
-    answer: "Phoenix Protocol is a structured yield protocol offering perpetual autocallable vaults with two-sided deposits, coupon payoffs, and fully onchain settlement powered by Chainlink CRE.",
+    answer: "Phoenix brings institutional autocallable structured products onchain. Deposit USDC into a worst-of vault on tokenized indices (SPY/QQQ), earn periodic coupons with built-in downside protection, fully settled on Ink.",
   },
   {
     id: "how-it-works",
-    question: "How do perpetual vaults work on Phoenix?",
-    answer: "Each vault has two sides: Side A deposits the underlying asset and earns USDC coupons, while Side B deposits USDC and profits from knock-in events. At each observation period, Chainlink CRE fetches the asset price and evaluates three barriers: cycle reset (above autocall), coupon payment, and knock-in (downside). The vault runs perpetual cycles — when a cycle ends, the strike resets and a new cycle begins automatically.",
-  },
-  {
-    id: "two-sided",
-    question: "What are Side A and Side B?",
-    answer: "Side A (Earn) deposits the underlying asset (ETH, wstETH, xTSLA, etc.) and earns USDC coupons paid from Side B capital each period. Side B (Hedge) deposits USDC and profits when a knock-in triggers — Side A assets are liquidated via CowSwap and proceeds go to Side B. This creates a balanced risk-reward structure between yield seekers and downside hedgers.",
+    question: "How does the vault work?",
+    answer: "You deposit USDC. Every month, the protocol checks if SPY and QQQ are above 70% of their starting price. If yes, you earn a coupon (~0.75%). If both are above 100%, you get your capital back early (autocall). At maturity (6 months), if neither dropped below 70%, you get everything back.",
   },
   {
     id: "supported-assets",
-    question: "What assets are supported on Phoenix?",
-    answer: "Phoenix supports 19 vaults across 5 categories: Spot (ETH, BTC, SOL, stETH, wstETH via DeFi Llama), Perps (ETH, BTC, SOL via Hyperliquid), Yield tokens (uniETH YT, sUSDai YT, weETH YT, wstETH YT via Pendle), Rates (Aave WETH, USDC, USDT, sGHO via DeFi Llama), and Equities (TSLA, AAPL, NVDA via xStocks).",
+    question: "What assets are supported?",
+    answer: "Currently one vault: worst-of basket on the S&P 500 (wSPYx) and Nasdaq 100 (wQQQx), powered by xStocks tokenized indices on Ink.",
   },
   {
     id: "getting-started",
     question: "How do I get started?",
-    answer: "Connect your wallet on Ethereum Sepolia, choose the Earn or Hedge side, browse available vaults, review the parameters (strike price, barriers, coupon rate), approve your tokens, and deposit. The protocol handles everything else — observations, coupon payments, cycle resets, and liquidations are all automated.",
+    answer: "Connect your wallet on Ink, deposit USDC (minimum $100), and the protocol handles observations, coupons, and settlement automatically.",
   },
   {
     id: "what-is-phoenix-memory",
     question: "What is Phoenix Memory?",
-    answer: "Phoenix Memory remembers missed coupon payments when the price is between the knock-in and coupon barriers. These missed coupons accumulate (up to the memory depth cap) and are paid retroactively the next time the price recovers above the coupon barrier, at cycle reset, or at cycle end. If a knock-in occurs, all memory coupons are forfeited.",
+    answer: "Phoenix Memory remembers missed coupon payments when the price is between the knock-in and coupon barriers. These missed coupons accumulate and are paid retroactively the next time the price recovers above the coupon barrier or at maturity. If a knock-in occurs, all memory coupons are forfeited.",
   },
   {
     id: "what-are-barriers",
     question: "What are autocall, coupon, and knock-in barriers?",
-    answer: "Barriers are price thresholds relative to the strike price. The autocall barrier (typically 105%) triggers a cycle reset with coupon payout. The coupon barrier (typically 95%) triggers periodic yield payments. The knock-in barrier (typically 75%) triggers immediate liquidation — Side A assets are sold via CowSwap and the cycle resets with a new strike.",
+    answer: "Barriers are price thresholds relative to the strike price. The autocall barrier (100%, stepping down 2% per observation) triggers early redemption with coupon payout. The knock-in barrier (70%) is checked at maturity. If the worst-performing index is below 70% at maturity, you absorb losses proportional to the drop.",
   },
   {
     id: "what-happens-knock-in",
     question: "What happens if a knock-in occurs?",
-    answer: "When the price falls below the knock-in barrier, a proportional amount of Side A assets is liquidated via CowSwap. USDC proceeds go to Side B depositors. All accumulated Phoenix Memory coupons are forfeited. The cycle then resets with the current price as the new strike, and the vault continues running.",
+    answer: "If the worst-performing index drops below the 70% knock-in barrier at maturity, you absorb losses proportional to the drop. All accumulated Phoenix Memory coupons are forfeited. This is the worst-case scenario.",
   },
   {
     id: "how-settlement-works",
     question: "How do withdrawals work?",
-    answer: "Withdrawals use a two-step process with a 1-hour cooldown: first request a withdrawal, then execute it after the cooldown period. Your share of the vault is proportional: assets and earned USDC for Side A, or USDC capital for Side B. Withdrawals are blocked during pending CowSwap liquidations.",
+    answer: "At maturity or autocall, the vault settles automatically. Your USDC principal plus any earned coupons are returned to your wallet.",
   },
   {
-    id: "what-is-cre",
-    question: "What is Chainlink CRE?",
-    answer: "Chainlink CRE (Compute Runtime Environment) is the off-chain compute platform that powers Phoenix observations. A CRE workflow triggers on a cron schedule, fetches asset prices from 5 different data sources (DeFi Llama, Hyperliquid, Pendle, Aave, xStocks), evaluates barrier conditions, signs a report, and delivers it on-chain to the PerpetualSettlement contract.",
-  },
-  {
-    id: "cowswap",
-    question: "How does CowSwap liquidation work?",
-    answer: "On knock-in, the vault initiates a two-phase CowSwap liquidation: (1) the vault creates an order and approves the GPv2 VaultRelayer, (2) a keeper pre-signs the order on GPv2Settlement, (3) CoW solvers find the best execution price, and (4) the keeper finalizes, crediting USDC proceeds to Side B. If no fill occurs within 1 hour, the liquidation can be cancelled.",
-  },
-  {
-    id: "is-it-testnet",
-    question: "Is Phoenix live on mainnet?",
-    answer: "Phoenix is currently deployed on Ethereum Sepolia (testnet) with 19 perpetual vaults. You can try the full deposit, observation, and settlement flow using test tokens without real funds.",
+    id: "what-chain",
+    question: "What chain is Phoenix on?",
+    answer: "Phoenix is deployed on Ink Sepolia (testnet). You can try the full deposit, observation, and settlement flow using test tokens without real funds.",
   },
 ]
 

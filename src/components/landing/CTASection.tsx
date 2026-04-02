@@ -125,8 +125,9 @@ export function CTASection() {
               data-cta-anim
               className="mx-auto mt-5 max-w-lg text-white/[0.5] opacity-0"
             >
-              Connect your wallet and deposit into live vaults.
-              No minimums, no lock-ups beyond the vault term.
+              Connect your wallet and deposit USDC into live autocallable vaults.
+              Earn periodic coupons on tokenized indices with built-in capital protection.
+              Minimum 100 USDC, 6-month term.
             </p>
             <Link
               href="/app/deposit"

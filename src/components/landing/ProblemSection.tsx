@@ -12,7 +12,7 @@ const DEFI_TODAY = [
 const PHOENIX_INTRODUCES = [
   { stat: 'Autocallable Vaults on xStocks', desc: 'Worst-of baskets on Nasdaq 100 & S&P 500 with barrier protection' },
   { stat: 'Fully Onchain Settlement', desc: 'Every observation and payout executed by smart contracts' },
-  { stat: 'Verified by Chainlink CRE', desc: 'Cryptographic quorum signs every price feed and barrier check' },
+  { stat: 'Verified by Pyth Network', desc: 'Real-time price feeds powering every barrier evaluation onchain' },
 ]
 
 function AnimatedCounter({ target, inView }: { target: number; inView: boolean }) {
