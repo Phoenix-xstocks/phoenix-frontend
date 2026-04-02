@@ -22,10 +22,10 @@ const PILLARS = [
 ]
 
 const VAULT_PARAMS = [
-  { label: 'Coupon Rate', value: '1.5%', sub: 'per period' },
-  { label: 'Autocall Barrier', value: '105%', sub: 'of initial' },
-  { label: 'Knock-in Barrier', value: '70%', sub: 'of initial' },
-  { label: 'Maturity', value: '6', sub: 'periods' },
+  { label: 'Coupon Rate', value: '~1.7%', sub: 'per observation' },
+  { label: 'Autocall Barrier', value: '100%', sub: 'steps down 2%/obs' },
+  { label: 'Knock-in Barrier', value: '70%', sub: 'at maturity' },
+  { label: 'Maturity', value: '6', sub: 'months · 6 obs' },
 ]
 
 /* kept for later

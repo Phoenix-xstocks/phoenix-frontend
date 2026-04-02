@@ -10,6 +10,7 @@ import {
 import { parseUnits, decodeEventLog } from 'viem';
 import { CONTRACTS } from '@/lib/contracts';
 import { inkSepolia } from '@/lib/chains';
+import { FLAGSHIP_BASKET } from '@/lib/constants';
 import { useDepositRequest, RequestStatus } from './useDepositRequest';
 import { useEnsureChain } from './useEnsureChain';
 
@@ -56,7 +57,7 @@ type DepositAction =
 const initialState: DepositState = {
   step: 'configure',
   amount: '',
-  basket: [],
+  basket: [...FLAGSHIP_BASKET] as `0x${string}`[],
   requestId: undefined,
   noteTokenId: undefined,
   txHash: undefined,
