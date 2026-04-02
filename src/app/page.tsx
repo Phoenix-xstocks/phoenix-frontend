@@ -166,6 +166,49 @@ export default function Home() {
         <ProductSection />
       </div>
 
+      {/* The Basket */}
+      <section className="py-28 px-6">
+        <div className="mx-auto max-w-5xl">
+          <div className="flex flex-col lg:flex-row gap-16 items-center">
+            {/* Left: overlapping circles */}
+            <div className="lg:w-1/2 flex justify-center">
+              <div className="flex -space-x-16">
+                <div className="w-72 h-72 rounded-full bg-[#0096D6]/20 flex items-center justify-center">
+                  <Image src="/nasdaq.svg" alt="Nasdaq" width={140} height={140} className="object-contain" />
+                </div>
+                <div className="w-72 h-72 rounded-full bg-[#E3242B]/20 flex items-center justify-center">
+                  <Image src="/sp500.svg" alt="S&P Global" width={140} height={140} className="object-contain" />
+                </div>
+              </div>
+            </div>
+
+            {/* Right: explanation */}
+            <div className="lg:w-1/2 space-y-6">
+              <p className="text-xs uppercase tracking-[0.2em] text-white/[0.5]">The Basket</p>
+              <h2 className="text-3xl md:text-4xl font-light text-white">
+                Tokenized Indices, Onchain.
+              </h2>
+              <p className="text-sm text-white/[0.5] leading-relaxed">
+                Phoenix&apos;s flagship vault tracks a worst-of basket of two tokenized indices powered by xStocks: the <span className="text-[#0096D6]">Nasdaq 100</span> and the <span className="text-[#E3242B]">S&P 500</span>. The payoff depends on the worst performer — if neither drops below the 70% knock-in barrier at maturity, your capital is fully protected.
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="border-l-2 border-white/10 pl-4">
+                  <p className="text-2xl font-light text-white">70%</p>
+                  <p className="text-[11px] text-white/[0.5] mt-1">Knock-in barrier</p>
+                </div>
+                <div className="border-l-2 border-white/10 pl-4">
+                  <p className="text-2xl font-light text-white">100%</p>
+                  <p className="text-[11px] text-white/[0.5] mt-1">Autocall trigger</p>
+                </div>
+              </div>
+              <p className="text-xs text-white/30">
+                The worst-of mechanism concentrates risk on the single underperformer, which is why the yield is higher than single-asset strategies.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Structured for Every Scenario — exact component from /frontend */}
       <div className="snap-start snap-always" style={{ background: 'transparent' }}>
         <LandingFeatures />

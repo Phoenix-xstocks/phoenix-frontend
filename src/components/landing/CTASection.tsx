@@ -145,7 +145,7 @@ export function CTASection() {
               No minimums, no lock-ups beyond the vault term.
             </p>
             <Link
-              href="/app"
+              href="/app/deposit"
               data-cta-btn
               className="mt-8 inline-block rounded-full border border-white bg-white px-8 py-3 text-sm font-medium text-[#0a0e1a] hover:bg-gray-100 transition-all opacity-0 animate-[pulse-glow_2.5s_ease-in-out_infinite_1.5s]"
             >

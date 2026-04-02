@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { useAccount, useWriteContract } from 'wagmi';
 import { toast } from 'sonner';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { HeroScene } from '@/components/hero-scene';
 import { BasketSelector } from '@/components/deposit/BasketSelector';
 import { AmountInput } from '@/components/deposit/AmountInput';
 import { FeeBreakdown } from '@/components/deposit/FeeBreakdown';
@@ -200,8 +201,13 @@ export default function DepositPage() {
   );
 
   return (
-    <PageContainer title="Deposit" subtitle="Create a new autocall note with USDC">
-      {content}
-    </PageContainer>
+    <>
+      <div className="fixed inset-0 -z-10">
+        <HeroScene scrollProgress={0} centerMode />
+      </div>
+      <PageContainer title="Deposit" subtitle="Create a new autocall note with USDC">
+        {content}
+      </PageContainer>
+    </>
   );
 }
